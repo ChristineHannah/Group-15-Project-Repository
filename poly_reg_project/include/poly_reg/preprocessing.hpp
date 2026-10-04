@@ -13,7 +13,7 @@ namespace poly_reg{
 
     //Min-Max Scaling
     //this scale sthe matrix features into a specific range
-    void MinmaxScale (Matrix& data, doulbe min_val = 0.0, double max_val = 1.0);
+    void MinmaxScale (Matrix& data, double min_val = 0.0, double max_val = 1.0);
 
     //Train/Test Split
     //this splits a dataset matrix into training and testing subsets
