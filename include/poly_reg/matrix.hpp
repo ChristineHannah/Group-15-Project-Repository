@@ -27,7 +27,7 @@ public:
     Matrix(int r, int c, double initial_value) : rows(r), cols(c), data(r, std::vector<double>(c, initial_value)) {
         if (r <= 0 || c <= 0) {
             throw std::runtime_error("Error: Matrix dimensions must be greater than zero.");
-}
+        }
     }
 
     // Dimension Getters
@@ -36,24 +36,24 @@ public:
 
     // 4. Element Indexing with bounds checking
     double& at(int r, int c) {
-                if (r < 0 || r >= rows || c < 0 || c >= cols) {
+        if (r < 0 || r >= rows || c < 0 || c >= cols) {
             throw std::out_of_range("Error: Matrix index out of bounds.");
-                }
+        }
         return data[r][c];
     }
 
     const double& at(int r, int c) const {
-                if (r < 0 || r >= rows || c < 0 || c >= cols) {
+        if (r < 0 || r >= rows || c < 0 || c >= cols) {
             throw std::out_of_range("Error: Matrix index out of bounds.");
-                }
+        }
         return data[r][c];
     }
 
     // 5. Matrix Addition
     Matrix add(const Matrix& other) const {
-                if (rows != other.rows || cols != other.cols) {
+        if (rows != other.rows || cols != other.cols) {
             throw std::runtime_error("Error: Matrix dimensions must match for addition.");
-                }
+        }
         Matrix result(rows, cols);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
@@ -65,7 +65,7 @@ public:
 
     // 6. Scalar Multiplication
     Matrix multiply_scalar(double scalar) const {
-                Matrix result(rows, cols);
+        Matrix result(rows, cols);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 result.data[i][j] = data[i][j] * scalar;
@@ -76,9 +76,9 @@ public:
 
     // 7. Matrix-Matrix Multiplication
     Matrix multiply(const Matrix& other) const {
-                if (cols != other.rows) {
+        if (cols != other.rows) {
             throw std::runtime_error("Error: Columns of first matrix must match rows of second matrix for multiplication.");
-                }
+        }
         Matrix result(rows, other.cols, 0.0);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < other.cols; ++j) {
