@@ -100,14 +100,36 @@ int main() {
     try { R * R; } catch (const invalid_argument&) { t6 = true; }  // 2x3 * 2x3 is not allowed
     check(t6, "multiplying incompatible sizes throws");
 
-    /* ---- INVERSION: not in the poly_reg::Matrix class yet ----
-    Joshua's inverse() is in a different Matrix class. Once it is merged into
-    poly_reg::Matrix, remove this comment and keep these tests:
-
+    // ---- Determinant, inverse, and linear systems ----
     Matrix D = {{4, 7}, {2, 6}};
+    check(nearly(D.determinant(), 10.0), "determinant of 2x2");
     check(matches(D.inverse(), {{0.6, -0.7}, {-0.2, 0.4}}), "inversion");
     check(matches(D * D.inverse(), {{1, 0}, {0, 1}}), "matrix times its inverse = identity");
-    */
+
+    Matrix coefficients = {{2, 1}, {1, -1}};
+    Matrix constants = {{5}, {1}};
+    check(matches(coefficients.solve(constants), {{2}, {1}}), "solving a linear system");
+
+    Matrix requires_pivot = {{0, 2}, {1, 3}};
+    Matrix multiple_constants = {{4, 2}, {7, 3}};
+    check(nearly(requires_pivot.determinant(), -2.0), "determinant with row pivoting");
+    check(matches(requires_pivot.solve(multiple_constants), {{1, 0}, {2, 1}}),
+        "solving multiple right-hand sides with row pivoting");
+
+    Matrix singular = {{1, 2}, {2, 4}};
+    check(nearly(singular.determinant(), 0.0), "singular determinant is zero");
+    bool singular_inverse = false;
+    try { singular.inverse(); } catch (const domain_error&) { singular_inverse = true; }
+    check(singular_inverse, "inverting a singular matrix throws");
+
+    bool non_square_determinant = false;
+    try { R.determinant(); } catch (const invalid_argument&) { non_square_determinant = true; }
+    check(non_square_determinant, "determinant of a non-square matrix throws");
+
+    bool mismatched_system = false;
+    Matrix wrong_constants = {{5}};
+    try { coefficients.solve(wrong_constants); } catch (const invalid_argument&) { mismatched_system = true; }
+    check(mismatched_system, "linear system with mismatched dimensions throws");
 
     if (failures == 0) {
         cout << "All matrix tests passed.\n";

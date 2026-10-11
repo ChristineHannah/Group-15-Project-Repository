@@ -32,6 +32,10 @@ namespace poly_reg {
 
         Matrix transpose() const; //Transpose of a matrix
 
+        double determinant() const;
+        Matrix inverse() const;
+        Matrix solve(const Matrix& right_hand_side) const;
+
     private:
         std::size_t rows_;
         std::size_t cols_;
