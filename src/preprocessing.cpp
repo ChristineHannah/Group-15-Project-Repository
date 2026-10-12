@@ -74,6 +74,10 @@ namespace poly_reg {
     //3. Train-test split function
     std::pair <Matrix, Matrix> TraintestSplit(const Matrix& data, double train_ratio){
     size_t total_rows = data.rows();
+
+    if (train_ratio <= 0.0 || train_ratio >= 1.0){
+        throw std:: invalid_argument ("Train ratio must be between 0.0 and 1.0");
+    }
     size_t train_rows = static_cast<size_t> (total_rows * train_ratio);
     size_t test_rows = total_rows - train_rows;
 
