@@ -14,6 +14,10 @@ file(GLOB SOURCES "src/*.cpp")
 # Build the main reusable library
 add_library(poly_reg_lib ${SOURCES})
 
+# Build a runnable example against the matrix library.
+add_executable(matrix_demo examples/matrix_demo.cpp)
+target_link_libraries(matrix_demo PRIVATE poly_reg_lib)
+
 # (Optional) Build tests if test files exist in tests/
 file(GLOB TEST_SOURCES "tests/*.cpp")
 foreach(TEST_FILE ${TEST_SOURCES})
