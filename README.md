@@ -130,7 +130,9 @@ All tests should pass before a Pull Request is merged.
 ├── data/
 │   └── input/            # Sample CSV datasets
 ├── examples/
-└── reports/
+└── reports/            
+│   ├── General reports
+│   ├── Individual reports 
 ```
 
 ---
