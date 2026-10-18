@@ -16,12 +16,12 @@ Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix
 
     Matrix scaled_matrix(total_rows, total_cols);
 
-    // Compute Min-Max scaling independently for each column (feature)
+    // Compute Min-Max scaling independently for each feature column
     for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
         double column_min = input_feature_matrix.at(0, col_idx);
         double column_max = input_feature_matrix.at(0, col_idx);
 
-        // Find min and max values in the current column
+        // Find the minimum and maximum values in the current column
         for (int row_idx = 1; row_idx < total_rows; ++row_idx) {
             double current_value = input_feature_matrix.at(row_idx, col_idx);
             if (current_value < column_min) column_min = current_value;
@@ -30,7 +30,7 @@ Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix
 
         double value_range = column_max - column_min;
 
-        // Apply scaling transformation row by row for this column
+        // Scale each value in the column to the range [0.0, 1.0]
         for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
             double raw_value = input_feature_matrix.at(row_idx, col_idx);
             if (value_range == 0.0) {
@@ -59,13 +59,13 @@ Matrix Preprocessing::compute_z_score_standardization(const Matrix& input_featur
     for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
         double column_sum = 0.0;
 
-        // Step 1: Calculate column mean (mu)
+        // Step 1: Calculate the arithmetic mean (mu) for the column
         for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
             column_sum += input_feature_matrix.at(row_idx, col_idx);
         }
         double column_mean = column_sum / static_cast<double>(total_rows);
 
-        // Step 2: Calculate standard deviation (sigma)
+        // Step 2: Calculate the sample standard deviation (sigma)
         double squared_difference_sum = 0.0;
         for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
             double difference = input_feature_matrix.at(row_idx, col_idx) - column_mean;
@@ -73,7 +73,7 @@ Matrix Preprocessing::compute_z_score_standardization(const Matrix& input_featur
         }
         double column_std_dev = std::sqrt(squared_difference_sum / static_cast<double>(total_rows - 1));
 
-        // Step 3: Apply Z-score transformation: (x - mean) / std_dev
+        // Step 3: Apply the Z-score transformation formula: (x - mean) / std_dev
         for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
             double raw_value = input_feature_matrix.at(row_idx, col_idx);
             if (column_std_dev == 0.0) {
@@ -105,14 +105,14 @@ std::pair<Matrix, Matrix> Preprocessing::split_train_test_data(const Matrix& dat
     Matrix training_subset(training_row_count, total_cols);
     Matrix testing_subset(testing_row_count, total_cols);
 
-    // Populate training subset
+    // Populate the training subset matrix from the top portion of the dataset
     for (int row_idx = 0; row_idx < training_row_count; ++row_idx) {
         for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
             training_subset.at(row_idx, col_idx) = dataset_matrix.at(row_idx, col_idx);
         }
     }
 
-    // Populate testing subset
+    // Populate the testing subset matrix from the remaining lower portion of the dataset
     for (int row_idx = 0; row_idx < testing_row_count; ++row_idx) {
         for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
             testing_subset.at(row_idx, col_idx) = dataset_matrix.at(training_row_count + row_idx, col_idx);
