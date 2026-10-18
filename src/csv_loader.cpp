@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <vector>
 #include <cctype>
+#include <algorithm>
 
 namespace PolyReg {
 
@@ -23,8 +24,8 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
     while (std::getline(file_stream, current_line)) {
         line_number++;
 
-        // Skip empty lines or purely whitespace lines
-        if (current_line.empty() || all_of(current_line.begin(), current_line.end(), [](unsigned char c){ return std::isspace(c); })) {
+        // Skip empty lines or lines containing only whitespace
+        if (current_line.empty() || std::all_of(current_line.begin(), current_line.end(), [](unsigned char c){ return std::isspace(c); })) {
             continue;
         }
 
@@ -38,7 +39,7 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
         std::vector<double> current_row_values;
 
         while (std::getline(line_stream, cell_value_str, ',')) {
-            // Trim leading/trailing whitespace around cell values if any
+            // Trim leading and trailing whitespace around each cell value
             size_t first_non_space = cell_value_str.find_first_not_of(" \t\r\n");
             if (first_non_space == std::string::npos) {
                 continue; // Skip empty cells
@@ -47,12 +48,12 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
             std::string cleaned_cell = cell_value_str.substr(first_non_space, (last_non_space - first_non_space + 1));
 
             try {
-                // Edge Case 2: Malformed non-numeric data parsing check
+                // Edge Case 2: Handle floating-point numeric conversions and check for malformed data
                 size_t characters_processed = 0;
                 double numeric_value = std::stod(cleaned_cell, &characters_processed);
                 
                 if (characters_processed != cleaned_cell.size()) {
-                    throw std::invalid_argument("Malformed non-numeric token encountered.");
+                    throw std::invalid_argument("Malformed non-numeric token detected.");
                 }
 
                 current_row_values.push_back(numeric_value);
@@ -66,7 +67,7 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
             continue;
         }
 
-        // Edge Case 3: Inconsistent row lengths across the dataset
+        // Edge Case 3: Verify consistent row widths across the entire dataset
         if (expected_column_count == -1) {
             expected_column_count = static_cast<int>(current_row_values.size());
         } else if (static_cast<int>(current_row_values.size()) != expected_column_count) {
@@ -80,15 +81,15 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
 
     file_stream.close();
 
-    // Edge Case 4: File was empty or contained only headers
+    // Edge Case 4: Ensure the file contained valid numeric rows
     if (parsed_row_collection.empty()) {
-        throw std::runtime_error("Error: Dataset file contains no valid numeric rows: " + file_path);
+        throw std::runtime_error("Error: Dataset file contains no valid numeric data rows: " + file_path);
     }
 
     int total_rows = static_cast<int>(parsed_row_collection.size());
     int total_cols = expected_column_count;
 
-    // Construct the final Matrix object and populate it from standard C++ containers
+    // Construct the final Matrix object and populate it safely using encapsulation
     Matrix loaded_dataset_matrix(total_rows, total_cols);
 
     for (int r = 0; r < total_rows; ++r) {
