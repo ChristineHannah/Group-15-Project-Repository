@@ -192,7 +192,7 @@ x,y
 | **Kyamulabi Priscilla** | Preprocessing: Z-score, Min-Max scaling, train/test split | `include/poly_reg/preprocessing.hpp`, `src/preprocessing.cpp` |
 | **Kyankya Joseph** | Testing: test suites for all Week 1 modules | `tests/test_matrix.cpp`, `tests/test_preprocessing.cpp` |
 | **Christine Hannah Adong** | Repository setup, CMake build system, PR review and merging | `.gitignore`, `CMakeLists.txt`, folder layout, branch protection |
-| **Giddudu Allan Bright** | Documentation: README, sample datasets, header comments | `README.md`, CSV files in `data/input/` |
+| **Gidudu Allan Bright** | Documentation: README, sample datasets, header comments | `README.md`, CSV files in `data/input/` |
 
 ---
 
