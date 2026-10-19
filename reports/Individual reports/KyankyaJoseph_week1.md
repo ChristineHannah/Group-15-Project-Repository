@@ -1,11 +1,8 @@
 # Individual Progress Report - Week 01
 **Name:** KYANKYA JOSEPH
 **Role / Module:** Kyankya Joseph - Unit Test Suites  
-**Date:** October 2026  
 
----
-
-## 1. Summary of Completed Deliverables
+# 1. Summary of Completed Deliverables
 A. test_preprocessing.cpp⁠ 
 This file tests functions that prepare data before it is used in machine learning models
 functions
@@ -21,10 +18,7 @@ functions
 4. Determinant & Inverse: it is for calculating a matrix's determinant and inverse.  It checks that the determinant equals to 10 and that matrix times inverse gives the identity matrix.
 5. Exception Handling: it checks adding different sizes of matrices throws errors
 
-
----
-
-## 2. Object-Oriented Class Breakdown (Lecturer's Guidelines)
+# 2. Object-Oriented Class Breakdown (Lecturer's Guidelines)
 
 What class did you create?
 Answer:We created and tested elemnets within the PolyReg namespace, focusing on matrix structures and preprocessing data.
@@ -40,11 +34,9 @@ Answer:For data preparation, it has functions to scale numbers between 0 and 1, 
 Why are some members private and others public? How is the class used by the rest of the program?
 Answer:Private parts keep the internal data safe so other code cannot accidentally break it. Public parts give a safe way for the rest of the program to use the tools. The program uses these public tools to process data and run tests.
 
----
-
-## 3. Challenges & Solutions
+# 3. Challenges & Solutions
 Challenge:I struggled a lot with tricky code bugs and had a hard time pushing my work to GitHub.
 Solution:I used AI to help me find and fix the bugs in the code, and it also guided me step-by-step on how to successfully upload my work to GitHub.
 
-## 4. AI Tool Transparency
+# 4. AI Tool Transparency
 Tool Used:Gemini AI and Claude AI used to assist in debugging code, resolving GitHub upload issues. Claude was used to provide the skeleton of the code, generate the C++ source files, and give the instructions needed to create a branch and push work to the repository.
