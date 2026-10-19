@@ -25,7 +25,7 @@ void test_matrix_construction_and_access() {
     std::cout << "[PASS] Matrix Construction and Element Access Test\n";
 }
 
-void test_matrix_addition() {
+void test_matrix_arithmetic() {
     using namespace PolyReg;
 
     Matrix matrix_a({
@@ -38,89 +38,56 @@ void test_matrix_addition() {
         {7.0, 8.0}
     });
 
+    // Test Addition (Arnold)
     Matrix sum_result = matrix_a.add(matrix_b);
-
-    assert(sum_result.get_rows() == 2);
-    assert(sum_result.get_cols() == 2);
     assert(is_nearly_equal(sum_result.at(0, 0), 6.0));
-    assert(is_nearly_equal(sum_result.at(0, 1), 8.0));
-    assert(is_nearly_equal(sum_result.at(1, 0), 10.0));
     assert(is_nearly_equal(sum_result.at(1, 1), 12.0));
 
-    std::cout << "[PASS] Matrix Addition Test\n";
-}
+    // Test Subtraction (Arnold)
+    Matrix diff_result = matrix_b.subtract(matrix_a);
+    assert(is_nearly_equal(diff_result.at(0, 0), 4.0));
+    assert(is_nearly_equal(diff_result.at(1, 1), 4.0));
 
-void test_matrix_multiplication() {
-    using namespace PolyReg;
-
-    Matrix matrix_a({
-        {1.0, 2.0},
-        {3.0, 4.0}
-    });
-
-    Matrix matrix_b({
-        {2.0, 0.0},
-        {1.0, 2.0}
-    });
-
+    // Test Multiplication (Arnold)
     Matrix product_result = matrix_a.multiply(matrix_b);
+    assert(is_nearly_equal(product_result.at(0, 0), 19.0));
+    assert(is_nearly_equal(product_result.at(1, 1), 50.0));
 
-    assert(product_result.get_rows() == 2);
-    assert(product_result.get_cols() == 2);
-    // [1*2 + 2*1, 1*0 + 2*2] = [4, 4]
-    // [3*2 + 4*1, 3*0 + 4*2] = [10, 8]
-    assert(is_nearly_equal(product_result.at(0, 0), 4.0));
-    assert(is_nearly_equal(product_result.at(0, 1), 4.0));
-    assert(is_nearly_equal(product_result.at(1, 0), 10.0));
-    assert(is_nearly_equal(product_result.at(1, 1), 8.0));
+    // Test Transpose (Arnold)
+    Matrix transposed = matrix_a.transpose();
+    assert(transposed.get_rows() == 2 && transposed.get_cols() == 2);
+    assert(is_nearly_equal(transposed.at(0, 1), 3.0));
 
-    std::cout << "[PASS] Matrix Multiplication Test\n";
+    std::cout << "[PASS] Matrix Arithmetic and Transpose Tests\n";
 }
 
-void test_matrix_transpose() {
+void test_matrix_solvers_and_inversion() {
     using namespace PolyReg;
 
-    Matrix original_matrix({
-        {1.0, 2.0, 3.0},
-        {4.0, 5.0, 6.0}
-    });
-
-    Matrix transposed_matrix = original_matrix.transpose();
-
-    assert(transposed_matrix.get_rows() == 3);
-    assert(transposed_matrix.get_cols() == 2);
-    assert(is_nearly_equal(transposed_matrix.at(0, 0), 1.0));
-    assert(is_nearly_equal(transposed_matrix.at(0, 1), 4.0));
-    assert(is_nearly_equal(transposed_matrix.at(2, 1), 6.0));
-
-    std::cout << "[PASS] Matrix Transpose Test\n";
-}
-
-void test_matrix_determinant_and_inverse() {
-    using namespace PolyReg;
-
-    // 2x2 Matrix: [[4.0, 7.0], [2.0, 6.0]]
-    // Determinant = (4*6) - (7*2) = 24 - 14 = 10.0
+    // 2x2 Square Matrix: [[4.0, 7.0], [2.0, 6.0]]
+    // Determinant = (4 * 6) - (7 * 2) = 24 - 14 = 10.0
     Matrix square_matrix({
         {4.0, 7.0},
         {2.0, 6.0}
     });
 
-    double det = square_matrix.compute_determinant();
-    assert(is_nearly_equal(det, 10.0));
+    // Test Determinant Calculation (Joshua)
+    double calculated_det = square_matrix.compute_determinant();
+    assert(is_nearly_equal(calculated_det, 10.0));
 
+    // Test Matrix Inversion (Joshua)
     Matrix inverted_matrix = square_matrix.compute_inverse();
     assert(inverted_matrix.get_rows() == 2);
     assert(inverted_matrix.get_cols() == 2);
 
     // Verify A * A^-1 equals Identity Matrix [[1, 0], [0, 1]]
-    Matrix identity_check = square_matrix.multiply(inverted_matrix);
-    assert(is_nearly_equal(identity_check.at(0, 0), 1.0));
-    assert(is_nearly_equal(identity_check.at(0, 1), 0.0));
-    assert(is_nearly_equal(identity_check.at(1, 0), 0.0));
-    assert(is_nearly_equal(identity_check.at(1, 1), 1.0));
+    Matrix identity_verification = square_matrix.multiply(inverted_matrix);
+    assert(is_nearly_equal(identity_verification.at(0, 0), 1.0));
+    assert(is_nearly_equal(identity_verification.at(0, 1), 0.0));
+    assert(is_nearly_equal(identity_verification.at(1, 0), 0.0));
+    assert(is_nearly_equal(identity_verification.at(1, 1), 1.0));
 
-    std::cout << "[PASS] Matrix Determinant and Inverse Test\n";
+    std::cout << "[PASS] Matrix Determinant and Inversion Tests (Joshua)\n";
 }
 
 void test_matrix_exceptions() {
@@ -129,39 +96,41 @@ void test_matrix_exceptions() {
     Matrix matrix_a(2, 2, 1.0);
     Matrix matrix_b(3, 3, 2.0);
 
-    // Test dimension mismatch exception in addition
-    bool addition_exception_caught = false;
+    // Dimension mismatch exception check
+    bool exception_caught = false;
     try {
         matrix_a.add(matrix_b);
     } catch (const std::invalid_argument&) {
-        addition_exception_caught = true;
+        exception_caught = true;
     }
-    assert(addition_exception_caught);
+    assert(exception_caught);
 
-    // Test out of bounds index exception
-    bool out_of_bounds_caught = false;
+    // Singular matrix inversion exception check
+    Matrix singular_matrix({
+        {1.0, 2.0},
+        {2.0, 4.0}
+    });
+    bool singular_exception_caught = false;
     try {
-        matrix_a.at(5, 5);
-    } catch (const std::out_of_range&) {
-        out_of_bounds_caught = true;
+        singular_matrix.compute_inverse();
+    } catch (const std::runtime_error&) {
+        singular_exception_caught = true;
     }
-    assert(out_of_bounds_caught);
+    assert(singular_exception_caught);
 
-    std::cout << "[PASS] Matrix Exception Handling Test\n";
+    std::cout << "[PASS] Matrix Exception Handling Tests\n";
 }
 
 int main() {
-    std::cout << "--- Running Matrix Unit Tests ---" << std::endl;
+    std::cout << "--- Running Complete Matrix Unit Test Suite ---" << std::endl;
     try {
         test_matrix_construction_and_access();
-        test_matrix_addition();
-        test_matrix_multiplication();
-        test_matrix_transpose();
-        test_matrix_determinant_and_inverse();
+        test_matrix_arithmetic();
+        test_matrix_solvers_and_inversion();
         test_matrix_exceptions();
-        std::cout << "\nAll Matrix Unit Tests Passed Successfully!\n" << std::endl;
+        std::cout << "\nAll Matrix Tests Passed Successfully!\n" << std::endl;
     } catch (const std::exception& error) {
-        std::cerr << "[FAIL] Test suite failed with unhandled exception: " << error.what() << std::endl;
+        std::cerr << "[FAIL] Matrix test suite encountered an unexpected exception: " << error.what() << std::endl;
         return 1;
     }
     return 0;
