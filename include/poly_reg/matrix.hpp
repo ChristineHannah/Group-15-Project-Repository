@@ -30,10 +30,10 @@ namespace PolyReg
         const double &at(size_t r, size_t c) const;
 
         // Core Arithmetic Operators (Arnold's Work)
-        Matrix operator+(const Matrix &other) const;
-        Matrix operator-(const Matrix &other) const;
-        Matrix operator*(double scalar) const;
-        Matrix operator*(const Matrix &other) const;
+        Matrix add(const Matrix &other) const;
+        Matrix subtract(const Matrix &other) const;
+        Matrix multiply(double scalar) const;
+        Matrix multiply(const Matrix &other) const;
 
         // Matrix Transformation (Arnold's Work)
         Matrix transpose() const;

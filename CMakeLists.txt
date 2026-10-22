@@ -1,34 +1,42 @@
 cmake_minimum_required(VERSION 3.14)
 project(PolyRegLibrary VERSION 1.0.0 LANGUAGES CXX)
 
-# Set C++17 standard globally across all targets
+# Enforce C++17 standard compliance globally
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Define include directory paths so headers are globally accessible via "poly_reg/..."
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# Gather all core source files contributed by team members
+# Gather all core library implementation source files (Weeks 1 through 3)
 set(POLYREG_SOURCES
     src/matrix.cpp
     src/csv_loader.cpp
     src/preprocessing.cpp
     src/feature_expansion.cpp
+    src/polynomial_regression.cpp
 )
 
-# Build the main PolyReg object-oriented library target
+# Build the main PolyReg static library target
 add_library(poly_reg STATIC ${POLYREG_SOURCES})
 
-# Build the test suites (integrating Joseph's unit tests)
-add_executable(run_tests 
-    tests/test_matrix.cpp
-    tests/test_preprocessing.cpp
+# Attach public include directories directly to the library target using modern CMake standards
+target_include_directories(poly_reg PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Link the test suite executable with the core library target
+# Build Executable 1: Unit Test Suite Target (Joseph)
+add_executable(run_tests
+    tests/test_matrix.cpp
+    tests/test_preprocessing.cpp
+    tests/test_regression.cpp
+)
 target_link_libraries(run_tests PRIVATE poly_reg)
 
-# Optional: Enable testing framework integration
+# Build Executable 2: End-to-End Demonstration Target (Allan)
+add_executable(run_demo
+    examples/polynomial_regression_demo.cpp
+)
+target_link_libraries(run_demo PRIVATE poly_reg)
+
+# Enable testing framework integration
 enable_testing()
-add_test(NAME MatrixAndPreprocessingTests COMMAND run_tests)
+add_test(NAME IntegrationTests COMMAND run_tests)
