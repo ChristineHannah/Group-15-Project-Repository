@@ -33,6 +33,9 @@ Answer: No class in the code on main extends another and nothing is virtual, so 
 Encapsulation
 Answer: Matrix keeps its data private and exposes it only through public functions. CSVLoader, FeatureExpansion and Preprocessing hold no data and contain only static functions.
 
+Class layout drawing (hand-drawn):
+![Class layout](images/KyankyaJoseph_class_layout.jpg)
+
 # 3. Challenges & Solutions
 Challenge: The test calls PolynomialRegression and RegressionMetrics, which are not on main yet, so I could not compile it.
 Solution: I said this clearly in the pull request description, and I will compile it once those classes are merged. 
