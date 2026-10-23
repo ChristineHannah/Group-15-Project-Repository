@@ -17,8 +17,9 @@ A group project for **Machine Learning 7**. We implement polynomial regression f
 9. [Running the Training and Evaluation Demo](#running-the-training-and-evaluation-demo)
 10. [Team Roles (Week 1)](#team-roles-week-1)
 11. [Team Roles (Week 2)](#team-roles-week-2)
-12. [Git Workflow](#git-workflow)
-13. [Coding Guidelines](#coding-guidelines)
+12. [Team Roles (Week 3)](#team-roles-week-3)
+13. [Git Workflow](#git-workflow)
+14. [Coding Guidelines](#coding-guidelines)
 
 ---
 
@@ -43,7 +44,7 @@ To get there, we build every layer ourselves:
 3. **Preprocess** data with scaling and train/test splitting.
 4. **Verify** each module with automated tests.
 
-The project runs over 4 weeks. Week 1 covers the foundation: data loading, matrices, preprocessing, tests and repository setup. Week 2 builds the regression model on top of it: feature expansion, the Normal Equation solver, evaluation metrics (MSE and RMSE), prediction export and regression tests.
+The project runs over 4 weeks. Week 1 covers the foundation: data loading, matrices, preprocessing, tests and repository setup. Week 2 builds the regression model on top of it: feature expansion, the Normal Equation solver, evaluation metrics (MSE and RMSE), prediction export and regression tests. Week 3 connects everything into one training pipeline (raw CSV in, polynomial features, weights, predictions and scores out), adds test datasets for degrees 1 to 4, and verifies the results with integration tests.
 
 ---
 
@@ -139,7 +140,7 @@ All tests should pass before a Pull Request is merged.
 │   ├── input/            # Sample CSV datasets (degrees 1 to 5)
 │   └── output/           # Saved predictions (predictions.csv)
 ├── examples/
-└── reports/
+└── reports/              # Weekly group status reports (e.g. week-03.md)
 ```
 
 ---
@@ -215,6 +216,17 @@ Five datasets are provided, one per true polynomial degree `d`. Each is generate
 | `data/input/poly_degree4.csv` | 4 | Quartic curve |
 | `data/input/poly_degree5.csv` | 5 | Quintic curve |
 
+**Week 3 test datasets (d = 1, 2, 3, 4):** four additional datasets are provided for the Week 3 full training demo. Use each file with its matching degree, and use other degrees on the same file to compare errors.
+
+| File | True degree (d) | Use |
+| --- | --- | --- |
+| `data/input/week3_degree1.csv` | 1 | Straight line |
+| `data/input/week3_degree2.csv` | 2 | Quadratic curve |
+| `data/input/week3_degree3.csv` | 3 | Cubic curve |
+| `data/input/week3_degree4.csv` | 4 | Quartic curve |
+
+They use the same format as the files above: `x,y` columns, comma-separated, one sample per row.
+
 Fitting with a degree **lower** than the true degree gives **underfitting** (high error on all points). Fitting with a degree **higher** than the true degree can give **overfitting**: the training error keeps dropping because the curve starts following the noise, but the model generalises worse to unseen data.
 
 ---
@@ -273,6 +285,52 @@ x,y_actual,y_predicted
 
 ---
 
+### Week 3: Full training demo (step by step)
+
+This walks through the full Week 3 pipeline: load a CSV, expand `x` into polynomial features, compute `XᵀX` and `Xᵀy`, solve for `β`, predict, score (MSE and RMSE) and save the results.
+
+**Step 0: Build** (from the project root):
+
+```bash
+cmake -B build
+cmake --build build
+```
+
+**Step 1: Train on each Week 3 test dataset (`week3_degree1.csv` to `week3_degree4.csv`)** with its matching degree:
+
+```bash
+./build/poly_reg_demo data/input/week3_degree1.csv 1
+./build/poly_reg_demo data/input/week3_degree2.csv 2
+./build/poly_reg_demo data/input/week3_degree3.csv 3
+./build/poly_reg_demo data/input/week3_degree4.csv 4
+```
+
+When the degree matches the data, the printed coefficients should be close to the curve the data was generated from, and the RMSE should be close to the noise level. Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if you want to keep a result.
+
+**Step 2: Compare degrees on the same dataset** (for example, a degree-4 dataset fitted too low):
+
+```bash
+./build/poly_reg_demo data/input/week3_degree4.csv 2   # underfit: error is high
+./build/poly_reg_demo data/input/week3_degree4.csv 4   # matching degree: error close to the noise level
+```
+
+**Step 3: Run all tests at once:**
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+**Troubleshooting**
+
+| Problem | Likely cause and fix |
+| --- | --- |
+| `./build/poly_reg_demo: No such file or directory` | The project is not built yet, or the executable has a different name. Run the build commands and check the target name in `CMakeLists.txt`. |
+| File not found error | Run the demo from the project root so that `data/input/...` resolves correctly. |
+| Singular matrix error | The degree is too high for the number of data points, so `XᵀX` cannot be inverted. Use a lower degree. |
+| Cannot write `predictions.csv` | The `data/output/` folder is missing. Recreate it with `mkdir -p data/output`. |
+
+---
+
 ## Team Roles (Week 1)
 
 | Member | Role | Deliverables |
@@ -298,6 +356,21 @@ x,y_actual,y_predicted
 | **Pruna Anzoa** | CSV export of predictions to `data/output/predictions.csv` | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/` |
 | **Allan** | Test datasets for d = 1 to 5, and README demo commands | `data/input/` datasets, `README.md` |
 | **Joseph** | Unit and integration tests for the regression weights | `tests/test_regression.cpp` |
+
+---
+
+## Team Roles (Week 3)
+
+| Member | Role | Deliverables |
+| --- | --- | --- |
+| **Kasule Arnold** | First half of the regression engine: transposed design matrix `Xᵀ` and the product `XᵀX` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Joshua (Rujo)** | Inverts `XᵀX` with the Week 2 matrix inverse, multiplies by `Xᵀy` and computes the weights `β` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Tatiana (Kyamulabi Priscilla)** | Evaluation functions: MSE and RMSE between predicted and actual values | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Tanga Ibrahim** | Connects the Week 2 polynomial feature expansion into the training pipeline so raw inputs become polynomial degrees automatically | `include/poly_reg/feature_expansion.hpp`, `src/feature_expansion.cpp` |
+| **Pruna Anzoa** | Extends the CSV loader to export predictions and final evaluation scores | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/predictions.csv` |
+| **Allan** | Test datasets for d = 1, 2, 3, 4, and README instructions for running the full training demo | `data/input/` datasets, `README.md` |
+| **Joseph** | Integration tests with strict `assert()` checks that the weights match known ground truths | `tests/test_regression.cpp` |
+| **Christine** | Updates `CMakeLists.txt` for the regression module, reviews and merges Pull Requests, compiles the group status report, updates the README | `CMakeLists.txt`, `reports/week-03.md`, `README.md` |
 
 ---
 
