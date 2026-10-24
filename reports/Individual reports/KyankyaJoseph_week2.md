@@ -45,5 +45,4 @@ Challenge:My project folder had old .exe files from earlier test builds, and the
 Solution:I added only the specific test files with git add, never the whole folder, and checked git status before every commit.
 
 # 4. AI Tool Transparency
-Tool Used: The Week 2 test files were generated with Claude, I did not write the test code myself.
-Claude helped with Git commands to submit the work. 
+Tool Used: The test files were further updated with help from Claude AI as well as consultation on GIT commands for submitting work. 
