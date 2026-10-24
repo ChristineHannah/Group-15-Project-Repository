@@ -489,7 +489,72 @@ Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if
 | Higher degrees (4 and 5) do not converge | Powers of `x` are on very different scales. Standardize the features (see Preprocessing) and lower the learning rate. |
 
 ---
+## Machine Learning Prediction Use Cases & Examples
 
+Our C++17 Polynomial Regression library supports end-to-end machine learning workflows, including closed-form Ordinary Least Squares (OLS) training, iterative Gradient Descent optimization, feature scaling, and visual estimations.
+
+### Use Case 1: Training an OLS Polynomial Model & Making Predictions
+The following example demonstrates loading a quadratic dataset, fitting a degree-2 polynomial model, solving for the weight vector ($\beta$), and predicting outputs:
+
+```cpp
+#include <iostream>
+#include "poly_reg/csv_loader.hpp"
+#include "poly_reg/polynomial_regression.hpp"
+
+int main() {
+    // 1. Load dataset
+    PolyReg::Matrix dataset = PolyReg::CSVLoader::load_dataset_from_csv("data/input/quadratic_clean.csv");
+    
+    int rows = dataset.get_rows();
+    PolyReg::Matrix X(rows, 1), y(rows, 1);
+    for(int i = 0; i < rows; ++i) {
+        X.at(i, 0) = dataset.at(i, 0);
+        y.at(i, 0) = dataset.at(i, 1);
+    }
+
+    // 2. Train Degree-2 Polynomial Regression Model
+    PolyReg::PolynomialRegression model(2);
+    model.fit(X, y);
+
+    // 3. Make Predictions on New Inputs
+    PolyReg::Matrix predictions = model.predict(X);
+    double mse = model.calculate_mse(y, predictions);
+    
+    std::cout << "Model successfully trained! MSE: " << mse << "\n";
+    return 0;
+}
+```
+### Visual Model Estimation Graph
+Below is a snapshot of our terminal-based ASCII visualization demo (`run_graph_demo.exe`), plotting the actual dataset points (`*`) against the model's fitted polynomial curve (`+`):
+
+```text
+--- VISUAL ESTIMATION GRAPH (* = Actual Data, + = Model Curve) ---
+Y-Max (409.4)
+  |                                                 *|
+  |                                                + |
+  |                                               *  |
+  |                                              *   |
+  |                                            *+    |
+  |                                           *      |
+  |                                         *+       |
+  |                                        *+        |
+  |                                      *+          |
+  |                                     *+           |
+  |                                    *+            |
+  |                                   *+             |
+  |                                  *+              |
+  |                                 *+               |
+  |                               **+                |
+  |                             *+                   |
+  |                           +*                     |
+  |   +*+                   *++                      |
+  |  *+*+                 *++++                      |
+  |*++*+++*++*++*++*++*++*+                          |
+  ----------------------------------------------------
+Y-Min (3.5)                                     X-Max (15.0)
+
+----
+```
 
 ## Team Roles (Week 1)
 
@@ -510,13 +575,13 @@ Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if
 | Member | Role | Deliverables |
 | --- | --- | --- |
 | **Kasule Arnold** | Normal Equations matrix product `XᵀX` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Joshua (Rujo)** | Coefficient vector `β = (XᵀX)⁻¹ Xᵀ y` using `inverse()` and matrix multiplication | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Tatiana (Kyamulabi Priscilla)** | Prediction, MSE and RMSE | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Rubangakene Joshua** | Coefficient vector `β = (XᵀX)⁻¹ Xᵀ y` using `inverse()` and matrix multiplication | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Kyamulabi Priscilla** | Prediction, MSE and RMSE | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
 | **Tanga Ibrahim** | Feature expansion connected to the training pipeline (degree-`d` design matrix) | `include/poly_reg/feature_expansion.hpp`, `src/feature_expansion.cpp` |
-| **Pruna Anzoa** | CSV export of predictions to `data/output/predictions.csv` | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/` |
-| **Allan** | Test datasets for d = 1 to 5, and README demo commands | `data/input/` datasets, `README.md` |
-| **Joseph** | Unit and integration tests for the regression weights | `tests/test_regression.cpp` |
-| **Christine** | Updates `CMakeLists.txt` to include the new regression module, reviews and merges everyone's Pull Requests, compiles the group status report | `CMakeLists.txt`, `reports/week-02.md` |
+| **Anzoa Pruna** | CSV export of predictions to `data/output/predictions.csv` | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/` |
+| **Gidudu Allan** | Test datasets for d = 1 to 5, and README demo commands | `data/input/` datasets, `README.md` |
+| **Kyankya Joseph** | Unit and integration tests for the regression weights | `tests/test_regression.cpp` |
+| **Christine Hannah Adong** | Updates `CMakeLists.txt` to include the new regression module, reviews and merges everyone's Pull Requests, compiles the group status report | `CMakeLists.txt`, `reports/week-02.md` |
 
 ---
 
@@ -525,13 +590,13 @@ Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if
 | Member | Role | Deliverables |
 | --- | --- | --- |
 | **Kasule Arnold** | First half of the regression engine: transposed design matrix `Xᵀ` and the product `XᵀX` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Joshua (Rujo)** | Inverts `XᵀX` with the Week 2 matrix inverse, multiplies by `Xᵀy` and computes the weights `β` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Tatiana (Kyamulabi Priscilla)** | Evaluation functions: MSE and RMSE between predicted and actual values | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Rubangakene Joshua** | Inverts `XᵀX` with the Week 2 matrix inverse, multiplies by `Xᵀy` and computes the weights `β` | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Kyamulabi Priscilla** | Evaluation functions: MSE and RMSE between predicted and actual values | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
 | **Tanga Ibrahim** | Connects the Week 2 polynomial feature expansion into the training pipeline so raw inputs become polynomial degrees automatically | `include/poly_reg/feature_expansion.hpp`, `src/feature_expansion.cpp` |
-| **Pruna Anzoa** | Extends the CSV loader to export predictions and final evaluation scores | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/predictions.csv` |
-| **Allan** | Test datasets for d = 1, 2, 3, 4, and README instructions for running the full training demo | `data/input/` datasets, `README.md` |
-| **Joseph** | Integration tests with strict `assert()` checks that the weights match known ground truths | `tests/test_regression.cpp` |
-| **Christine** | Updates `CMakeLists.txt` for the regression module, reviews and merges Pull Requests, compiles the group status report, updates the README | `CMakeLists.txt`, `reports/week-03.md`, `README.md` |
+| **Anzoa Pruna** | Extends the CSV loader to export predictions and final evaluation scores | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/predictions.csv` |
+| **Gidudu Allan Bright** | Test datasets for d = 1, 2, 3, 4, and README instructions for running the full training demo | `data/input/` datasets, `README.md` |
+| **Kyankya Joseph** | Integration tests with strict `assert()` checks that the weights match known ground truths | `tests/test_regression.cpp` |
+| **Christine Hannah Adong** | Updates `CMakeLists.txt` for the regression module, reviews and merges Pull Requests, compiles the group status report, updates the README | `CMakeLists.txt`, `reports/week-03.md`, `README.md` |
 
 ---
 
@@ -540,12 +605,12 @@ Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if
 | Member | Role | Deliverables |
 | --- | --- | --- |
 | **Kasule Arnold** | Math engine for Gradient Descent: the cost function (error) and the gradient vector (slope of the error), so the model knows which direction to adjust its weights | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Joshua (Rujo)** | Gradient Descent training loop built on Arnold's gradient code: takes small steps down the error surface using a learning rate until the error is lowest and the best weights are found | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
-| **Tatiana (Kyamulabi Priscilla)** | Loss-tracking functions that record how the error shrinks across training epochs, to confirm the model converges | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Rubangakene Joshua** | Gradient Descent training loop built on Arnold's gradient code: takes small steps down the error surface using a learning rate until the error is lowest and the best weights are found | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
+| **Kyamulabi Priscilla** | Loss-tracking functions that record how the error shrinks across training epochs, to confirm the model converges | `include/poly_reg/polynomial_regression.hpp`, `src/polynomial_regression.cpp` |
 | **Tanga Ibrahim** | Optimizes the feature expansion pipeline so expanded design matrices scale efficiently during iterative batch training | `include/poly_reg/feature_expansion.hpp`, `src/feature_expansion.cpp` |
-| **Pruna Anzoa** | Extends the file-handling utilities to route input files and export prediction results to `data/output/` | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/` |
-| **Allan** | Final user instructions in the README: how to build the project and run both the OLS and Gradient Descent demos from the terminal | `README.md` |
-| **Christine** | Updates `CMakeLists.txt` to compile the final executable targets, reviews and merges all final Pull Requests, compiles the final group status report, updates the README | `CMakeLists.txt`, `reports/week-04.md`, `README.md` |
+| **Anzoa Pruna** | Extends the file-handling utilities to route input files and export prediction results to `data/output/` | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp`, `data/output/` |
+| **Gidudu Allan Bright** | Final user instructions in the README: how to build the project and run both the OLS and Gradient Descent demos from the terminal | `README.md` |
+| **Christine Hannah Adong** | Updates `CMakeLists.txt` to compile the final executable targets, reviews and merges all final Pull Requests, compiles the final group status report, updates the README, added more demo examples (ascii graph, gradient descent, preprocessing export) | `CMakeLists.txt`, `reports/week-04.md`, `README.md` |
 
 ---
 

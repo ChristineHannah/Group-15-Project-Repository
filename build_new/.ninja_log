@@ -1,0 +1,30 @@
+# ninja log v7
+4	1324	8145779468766235	CMakeFiles/poly_reg.dir/src/matrix.cpp.obj	41143008c5cfd6c9
+31	1713	8145771409401090	CMakeFiles/poly_reg.dir/src/feature_expansion.cpp.obj	df3715da994eb5c
+50	1910	8145771409667975	CMakeFiles/run_tests.dir/tests/test_matrix.cpp.obj	e2676c6c21c16d48
+22	1957	8145771409317162	CMakeFiles/poly_reg.dir/src/preprocessing.cpp.obj	2535234107ab3843
+14	2069	8145771409231331	CMakeFiles/poly_reg.dir/src/csv_loader.cpp.obj	8cccc35ff8241420
+70	1762	8145771409821254	CMakeFiles/run_tests.dir/tests/test_preprocessing.cpp.obj	7ad4af5417f897e2
+40	1792	8145771409499327	CMakeFiles/poly_reg.dir/src/polynomial_regression.cpp.obj	35140a9bf1a42500
+1776	2718	8145771426852271	CMakeFiles/run_tests.dir/tests/test_gradient_descent.cpp.obj	9e1bd922f0a3c943
+1325	1520	8145779481981200	libpoly_reg.a	83310678002e271f
+1805	2959	8145771427539094	CMakeFiles/run_demo.dir/examples/polynomial_regression_demo.cpp.obj	8698e1bc8ff7c559
+6	551	8145774159577863	CMakeFiles/run_tests.dir/tests/test_regression.cpp.obj	b9becd94ea62b17
+1586	2027	8145779484598825	run_demo.exe	7b33f5b9be81059d
+2	191	8145797287453175	build.ninja	468b2bf2611b735a
+2	191	8145797287404704	D:/Campus/C++ Programming/poly_reg/build_new/cmake_install.cmake	468b2bf2611b735a
+2	191	8145797287404704	D:/Campus/C++ Programming/poly_reg/build_new/CTestTestfile.cmake	468b2bf2611b735a
+42	1063	8145779469166833	CMakeFiles/test_gradient_descent.dir/tests/test_gradient_descent.cpp.obj	5b3428a51c6bd421
+25	1074	8145779469039294	CMakeFiles/test_regression.dir/tests/test_regression.cpp.obj	8e0f5f8a748bfdcb
+17	1075	8145779468929642	CMakeFiles/test_preprocessing.dir/tests/test_preprocessing.cpp.obj	3782568ab653f449
+9	1145	8145779468838396	CMakeFiles/test_matrix.dir/tests/test_matrix.cpp.obj	35acd56478f84ff0
+1544	1986	8145779484176864	test_regression.exe	59b5035159d2f254
+1532	1993	8145779484071721	test_preprocessing.exe	8f0ac9520ea134cb
+1520	1998	8145779483934138	test_matrix.exe	99aeeaa781c75382
+1564	2012	8145779484430259	test_gradient_descent.exe	1647554926cd77a4
+4	540	8145792528897207	CMakeFiles/run_gd_demo.dir/examples/gradient_descent_demo.cpp.obj	b161e12d54c330cd
+9	590	8145792528943628	CMakeFiles/run_export_demo.dir/examples/preprocessing_export_demo.cpp.obj	d23281380353963a
+540	831	8145792534246251	run_gd_demo.exe	2a5e94bf828b9e07
+592	928	8145792534766299	run_export_demo.exe	7393d0f285fae6f1
+3	1044	8145797485680034	CMakeFiles/run_graph_demo.dir/examples/ascii_graph_demo.cpp.obj	1e56334db08c1ffe
+1052	1504	8145797496325601	run_graph_demo.exe	1096326466c4dcc0
