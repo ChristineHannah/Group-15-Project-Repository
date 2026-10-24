@@ -1,100 +1,125 @@
-#include "preprocessing.hpp"
-
-#include <iostream>
+#include "poly_reg/preprocessing.hpp"
 #include <cmath>
-#include <algorithm>
 #include <stdexcept>
+#include <numeric>
+#include <algorithm>
 
-namespace poly_reg {
-    // 1.Standardization function
-    void Standardize(Matrix& data){
-        size_t rows = data.rows();
-        size_t cols = data.cols();
+namespace PolyReg {
 
-        if (rows == 0  || cols ==0) 
-        return;
-        //scale each column by column
-        for (size_t j = 0; j < cols; ++j){
-            double sum = 0.0;
-            for (size_t i = 0; i < rows; ++i){
-                sum += data (i,j);
-            }
-            double mean = sum / rows;
+Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix) {
+    int total_rows = input_feature_matrix.get_rows();
+    int total_cols = input_feature_matrix.get_cols();
 
-            double variance_sum = 0.0;
-            for (size_t i = 0; i < rows; ++i){
-                variance_sum += std::pow(data(i,j) - mean, 2);
-            }
-           double std_dev = std::sqrt(variance_sum / rows);
-           
-           //avoid division by zero
-           if (std_dev == 0.0)
-           continue;
-
-           for (size_t i = 0; i < rows; ++i){
-            data (i, j) = (data(i,j) - mean) / std_dev;
-           }
-        }
+    if (total_rows == 0 || total_cols == 0) {
+        throw std::invalid_argument("Error: Cannot scale an empty matrix.");
     }
-    //2. Min-max scaling function
-    void MinmaxScale(Matrix& data, double min_val, double max_val){
-        size_t rows = data.rows();
-        size_t cols = data.cols();
 
-        if (rows == 0  || cols == 0)
-        return;
+    Matrix scaled_matrix(total_rows, total_cols);
 
-        for (size_t j = 0; j < cols; ++j){
-            double col_min = data (0,j);
-            double col_max = data (0,j);
+    // Compute Min-Max scaling independently for each feature column
+    for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
+        double column_min = input_feature_matrix.at(0, col_idx);
+        double column_max = input_feature_matrix.at(0, col_idx);
 
-            //find min and max for the current column
-            for (size_t i = 1; i < rows; ++i){
-                if (data(i,j) < col_min) col_min = data(i,j);
-                if (data(i,j) > col_max) col_max = data(i,j);
-            
+        // Find the minimum and maximum values in the current column
+        for (int row_idx = 1; row_idx < total_rows; ++row_idx) {
+            double current_value = input_feature_matrix.at(row_idx, col_idx);
+            if (current_value < column_min) column_min = current_value;
+            if (current_value > column_max) column_max = current_value;
+        }
+
+        double value_range = column_max - column_min;
+
+        // Scale each value in the column to the range [0.0, 1.0]
+        for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
+            double raw_value = input_feature_matrix.at(row_idx, col_idx);
+            if (value_range == 0.0) {
+                // Prevent division by zero if all values in the column are identical
+                scaled_matrix.at(row_idx, col_idx) = 0.0;
+            } else {
+                scaled_matrix.at(row_idx, col_idx) = (raw_value - column_min) / value_range;
             }
-            double range = col_max - col_min;
-
-            // scale column values
-            for (size_t i = 0; i < rows; ++i){
-                if (range == 0.0){
-                    data(i,j) = min_val;
-                
-                }
-                else {
-                    double normalized = (data(i,j) - col_min) / range;
-                    data(i, j) = normalized * (max_val - min_val) + min_val;
-                }
-            }
-
         }
     }
 
-    //3. Train-test split function
-    std::pair <Matrix, Matrix> TraintestSplit(const Matrix& data, double train_ratio){
-    size_t total_rows = data.rows();
-    size_t train_rows = static_cast<size_t> (total_rows * train_ratio);
-    size_t test_rows = total_rows - train_rows;
-
-    //assume the matrix class has aconstructor like Matrix(rows, columns
-    
-    Matrix train_data (train_rows, data.cols());
-    Matrix test_data (test_rows, data.cols());
-
-    // copy data into train subset
-    for (size_t i = 0; i < train_rows; ++i){
-        for (size_t j = 0; j < data.cols(); ++j){
-            train_data(i,j) = data(i,j);
-        }
-    }
-
-    // copy remaining data into testing subset
-    for (size_t i = 0; i < test_rows; ++i){
-        for (size_t j = 0; j < data.cols(); ++j){
-            test_data(i,j) = data(train_rows + i, j);
-        }
-    }
-    return {train_data, test_data};
+    return scaled_matrix;
 }
+
+Matrix Preprocessing::compute_z_score_standardization(const Matrix& input_feature_matrix) {
+    int total_rows = input_feature_matrix.get_rows();
+    int total_cols = input_feature_matrix.get_cols();
+
+    if (total_rows <= 1) {
+        throw std::invalid_argument("Error: Insufficient rows for Z-score standardization (requires at least 2 rows).");
+    }
+
+    Matrix standardized_matrix(total_rows, total_cols);
+
+    // Standardize each feature column independently
+    for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
+        double column_sum = 0.0;
+
+        // Step 1: Calculate the arithmetic mean (mu) for the column
+        for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
+            column_sum += input_feature_matrix.at(row_idx, col_idx);
+        }
+        double column_mean = column_sum / static_cast<double>(total_rows);
+
+        // Step 2: Calculate the sample standard deviation (sigma)
+        double squared_difference_sum = 0.0;
+        for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
+            double difference = input_feature_matrix.at(row_idx, col_idx) - column_mean;
+            squared_difference_sum += (difference * difference);
+        }
+        double column_std_dev = std::sqrt(squared_difference_sum / static_cast<double>(total_rows - 1));
+
+        // Step 3: Apply the Z-score transformation formula: (x - mean) / std_dev
+        for (int row_idx = 0; row_idx < total_rows; ++row_idx) {
+            double raw_value = input_feature_matrix.at(row_idx, col_idx);
+            if (column_std_dev == 0.0) {
+                standardized_matrix.at(row_idx, col_idx) = 0.0;
+            } else {
+                standardized_matrix.at(row_idx, col_idx) = (raw_value - column_mean) / column_std_dev;
+            }
+        }
+    }
+
+    return standardized_matrix;
 }
+
+std::pair<Matrix, Matrix> Preprocessing::split_train_test_data(const Matrix& dataset_matrix, double training_proportion) {
+    int total_rows = dataset_matrix.get_rows();
+    int total_cols = dataset_matrix.get_cols();
+
+    if (training_proportion <= 0.0 || training_proportion >= 1.0) {
+        throw std::invalid_argument("Error: Training proportion must be strictly between 0.0 and 1.0.");
+    }
+
+    int training_row_count = static_cast<int>(std::round(total_rows * training_proportion));
+    int testing_row_count = total_rows - training_row_count;
+
+    if (training_row_count == 0 || testing_row_count == 0) {
+        throw std::runtime_error("Error: Dataset size is too small to perform the requested train/test split.");
+    }
+
+    Matrix training_subset(training_row_count, total_cols);
+    Matrix testing_subset(testing_row_count, total_cols);
+
+    // Populate the training subset matrix from the top portion of the dataset
+    for (int row_idx = 0; row_idx < training_row_count; ++row_idx) {
+        for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
+            training_subset.at(row_idx, col_idx) = dataset_matrix.at(row_idx, col_idx);
+        }
+    }
+
+    // Populate the testing subset matrix from the remaining lower portion of the dataset
+    for (int row_idx = 0; row_idx < testing_row_count; ++row_idx) {
+        for (int col_idx = 0; col_idx < total_cols; ++col_idx) {
+            testing_subset.at(row_idx, col_idx) = dataset_matrix.at(training_row_count + row_idx, col_idx);
+        }
+    }
+
+    return {training_subset, testing_subset};
+}
+
+} // namespace PolyReg

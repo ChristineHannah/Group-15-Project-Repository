@@ -156,8 +156,9 @@ All tests should pass before a Pull Request is merged.
 │   ├── input/            # Sample CSV datasets (degrees 1 to 5)
 │   └── output/           # Saved predictions (predictions.csv)
 ├── examples/
-│   └── polynomial_regression_demo.cpp   # CLI demo (OLS and Gradient Descent)
-└── reports/              # Weekly group status reports (e.g. week-04.md)
+└── reports/
+    ├── General reports
+    └── Individual reports 
 ```
 
 ---
@@ -494,13 +495,13 @@ Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if
 
 | Member | Role | Deliverables |
 | --- | --- | --- |
-| **Pruna Anzoa** | Data loading: CSV parser with error handling | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp` |
+| **Anzoa Pruna** | Data loading: CSV parser with error handling | `include/poly_reg/csv_loader.hpp`, `src/csv_loader.cpp` |
 | **Kasule Arnold and Tanga Ibrahim** | Foundational `Matrix` class and basic operations | `include/poly_reg/matrix.hpp`, `src/matrix.cpp` |
-| **Joshua (Rujo)** | Advanced matrix operations: inversion, determinant, rank check | Extensions to `matrix.hpp` and `matrix.cpp` |
-| **Tatiana (Kyamulabi Priscilla)** | Preprocessing: Z-score, Min-Max scaling, train/test split | `include/poly_reg/preprocessing.hpp`, `src/preprocessing.cpp` |
-| **Joseph** | Testing: test suites for all Week 1 modules | `tests/test_matrix.cpp`, `tests/test_preprocessing.cpp` |
-| **Christine** | Repository setup, CMake build system, PR review and merging | `.gitignore`, `CMakeLists.txt`, folder layout, branch protection |
-| **Allan** | Documentation: README, sample datasets, header comments | `README.md`, CSV files in `data/input/` |
+| **Rubangakene Joshua** | Advanced matrix operations: inversion, determinant, rank check | Extensions to `matrix.hpp` and `matrix.cpp` |
+| **Kyamulabi Priscilla** | Preprocessing: Z-score, Min-Max scaling, train/test split | `include/poly_reg/preprocessing.hpp`, `src/preprocessing.cpp` |
+| **Kyankya Joseph** | Testing: test suites for all Week 1 modules | `tests/test_matrix.cpp`, `tests/test_preprocessing.cpp` |
+| **Christine Hannah Adong** | Repository setup, CMake build system, PR review and merging | `.gitignore`, `CMakeLists.txt`, folder layout, branch protection |
+| **Gidudu Allan Bright** | Documentation: README, sample datasets, header comments | `README.md`, CSV files in `data/input/` |
 
 ---
 

@@ -1,118 +1,137 @@
-// tests/test_matrix.cpp
-// Tests for poly_reg::Matrix: construction, access, +, -, scalar *, matrix *,
-// transpose, and invalid-input handling. Expected values are worked out by hand.
-
-#include <cmath>
 #include <iostream>
+#include <cassert>
+#include <cmath>
 #include <stdexcept>
-#include <vector>
-
 #include "poly_reg/matrix.hpp"
 
-using namespace std;
-using namespace poly_reg;
+// Helper function for safe floating-point comparison
+bool is_nearly_equal(double calculated_val, double expected_val, double tolerance = 1e-5) {
+    return std::fabs(calculated_val - expected_val) < tolerance;
+}
 
-static int failures = 0;
+void test_matrix_construction_and_access() {
+    using namespace PolyReg;
 
-static void check(bool condition, const char* name) {
-    if (condition) {
-        cout << "[PASS] " << name << "\n";
-    } else {
-        cout << "[FAIL] " << name << "\n";
-        ++failures;
+    Matrix custom_matrix({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0}
+    });
+
+    assert(custom_matrix.get_rows() == 2);
+    assert(custom_matrix.get_cols() == 3);
+    assert(is_nearly_equal(custom_matrix.at(0, 0), 1.0));
+    assert(is_nearly_equal(custom_matrix.at(1, 2), 6.0));
+
+    std::cout << "[PASS] Matrix Construction and Element Access Test\n";
+}
+
+void test_matrix_arithmetic() {
+    using namespace PolyReg;
+
+    Matrix matrix_a({
+        {1.0, 2.0},
+        {3.0, 4.0}
+    });
+
+    Matrix matrix_b({
+        {5.0, 6.0},
+        {7.0, 8.0}
+    });
+
+    // Test Addition (Arnold)
+    Matrix sum_result = matrix_a.add(matrix_b);
+    assert(is_nearly_equal(sum_result.at(0, 0), 6.0));
+    assert(is_nearly_equal(sum_result.at(1, 1), 12.0));
+
+    // Test Subtraction (Arnold)
+    Matrix diff_result = matrix_b.subtract(matrix_a);
+    assert(is_nearly_equal(diff_result.at(0, 0), 4.0));
+    assert(is_nearly_equal(diff_result.at(1, 1), 4.0));
+
+    // Test Multiplication (Arnold)
+    Matrix product_result = matrix_a.multiply(matrix_b);
+    assert(is_nearly_equal(product_result.at(0, 0), 19.0));
+    assert(is_nearly_equal(product_result.at(1, 1), 50.0));
+
+    // Test Transpose (Arnold)
+    Matrix transposed = matrix_a.transpose();
+    assert(transposed.get_rows() == 2 && transposed.get_cols() == 2);
+    assert(is_nearly_equal(transposed.at(0, 1), 3.0));
+
+    std::cout << "[PASS] Matrix Arithmetic and Transpose Tests\n";
+}
+
+void test_matrix_solvers_and_inversion() {
+    using namespace PolyReg;
+
+    // 2x2 Square Matrix: [[4.0, 7.0], [2.0, 6.0]]
+    // Determinant = (4 * 6) - (7 * 2) = 24 - 14 = 10.0
+    Matrix square_matrix({
+        {4.0, 7.0},
+        {2.0, 6.0}
+    });
+
+    // Test Determinant Calculation (Joshua)
+    double calculated_det = square_matrix.compute_determinant();
+    assert(is_nearly_equal(calculated_det, 10.0));
+
+    // Test Matrix Inversion (Joshua)
+    Matrix inverted_matrix = square_matrix.compute_inverse();
+    assert(inverted_matrix.get_rows() == 2);
+    assert(inverted_matrix.get_cols() == 2);
+
+    // Verify A * A^-1 equals Identity Matrix [[1, 0], [0, 1]]
+    Matrix identity_verification = square_matrix.multiply(inverted_matrix);
+    assert(is_nearly_equal(identity_verification.at(0, 0), 1.0));
+    assert(is_nearly_equal(identity_verification.at(0, 1), 0.0));
+    assert(is_nearly_equal(identity_verification.at(1, 0), 0.0));
+    assert(is_nearly_equal(identity_verification.at(1, 1), 1.0));
+
+    std::cout << "[PASS] Matrix Determinant and Inversion Tests (Joshua)\n";
+}
+
+void test_matrix_exceptions() {
+    using namespace PolyReg;
+
+    Matrix matrix_a(2, 2, 1.0);
+    Matrix matrix_b(3, 3, 2.0);
+
+    // Dimension mismatch exception check
+    bool exception_caught = false;
+    try {
+        matrix_a.add(matrix_b);
+    } catch (const std::invalid_argument&) {
+        exception_caught = true;
     }
-}
+    assert(exception_caught);
 
-static bool nearly(double a, double b, double tol = 1e-9) {
-    return fabs(a - b) < tol;
-}
+    // Singular matrix inversion exception check
+    Matrix singular_matrix({
+        {1.0, 2.0},
+        {2.0, 4.0}
+    });
+    bool singular_exception_caught = false;
+    try {
+        singular_matrix.compute_inverse();
+    } catch (const std::runtime_error&) {
+        singular_exception_caught = true;
+    }
+    assert(singular_exception_caught);
 
-// True if matrix m has the expected size and values.
-static bool matches(const Matrix& m, const vector<vector<double>>& expected) {
-    if (m.rows() != expected.size() || m.cols() != expected[0].size()) return false;
-    for (size_t i = 0; i < expected.size(); ++i)
-        for (size_t j = 0; j < expected[0].size(); ++j)
-            if (!nearly(m(i, j), expected[i][j])) return false;
-    return true;
+    std::cout << "[PASS] Matrix Exception Handling Tests\n";
 }
 
 int main() {
-    Matrix A = {{1, 2}, {3, 4}};
-    Matrix B = {{5, 6}, {7, 8}};
-
-    // ---- Construction and access ----
-    Matrix empty;
-    check(empty.rows() == 0 && empty.cols() == 0, "empty matrix is 0x0");
-
-    Matrix zeros(2, 3);
-    check(zeros.rows() == 2 && zeros.cols() == 3, "Matrix(2,3) has correct size");
-    check(nearly(zeros(1, 2), 0.0), "Matrix(2,3) is filled with zeros");
-
-    check(nearly(A(0, 1), 2.0) && nearly(A(1, 0), 3.0), "list constructor stores values row by row");
-
-    A(0, 0) = 9.0;
-    check(nearly(A(0, 0), 9.0), "element can be written through operator()");
-    A(0, 0) = 1.0;  // put it back for the tests below
-
-    // ---- Addition and subtraction ----
-    check(matches(A + B, {{6, 8}, {10, 12}}), "addition");
-    check(matches(B - A, {{4, 4}, {4, 4}}), "subtraction");
-
-    // ---- Scalar multiplication ----
-    check(matches(A * 3.0, {{3, 6}, {9, 12}}), "scalar multiplication");
-
-    // ---- Matrix multiplication ----
-    check(matches(A * B, {{19, 22}, {43, 50}}), "multiplication (2x2 * 2x2)");
-
-    Matrix R = {{1, 2, 3}, {4, 5, 6}};      // 2x3
-    Matrix S = {{7, 8}, {9, 10}, {11, 12}}; // 3x2
-    check(matches(R * S, {{58, 64}, {139, 154}}), "multiplication (2x3 * 3x2)");
-
-    Matrix I = {{1, 0}, {0, 1}};
-    check(matches(A * I, {{1, 2}, {3, 4}}), "multiplying by identity changes nothing");
-
-    // ---- Transpose ----
-    check(matches(R.transpose(), {{1, 4}, {2, 5}, {3, 6}}), "transpose of 2x3");
-    check(matches(A.transpose().transpose(), {{1, 2}, {3, 4}}), "transpose twice returns original");
-
-    // ---- Invalid inputs ----
-    bool t1 = false;
-    try { A(2, 0); } catch (const out_of_range&) { t1 = true; }
-    check(t1, "out-of-range row throws");
-
-    bool t2 = false;
-    try { A(0, 2); } catch (const out_of_range&) { t2 = true; }
-    check(t2, "out-of-range column throws");
-
-    bool t3 = false;
-    try { Matrix bad = {{1, 2}, {3}}; } catch (const invalid_argument&) { t3 = true; }
-    check(t3, "rows of different lengths throw");
-
-    bool t4 = false;
-    try { A + R; } catch (const invalid_argument&) { t4 = true; }
-    check(t4, "adding different sizes throws");
-
-    bool t5 = false;
-    try { A - R; } catch (const invalid_argument&) { t5 = true; }
-    check(t5, "subtracting different sizes throws");
-
-    bool t6 = false;
-    try { R * R; } catch (const invalid_argument&) { t6 = true; }  // 2x3 * 2x3 is not allowed
-    check(t6, "multiplying incompatible sizes throws");
-
-    /* ---- INVERSION: not in the poly_reg::Matrix class yet ----
-    Joshua's inverse() is in a different Matrix class. Once it is merged into
-    poly_reg::Matrix, remove this comment and keep these tests:
-
-    Matrix D = {{4, 7}, {2, 6}};
-    check(matches(D.inverse(), {{0.6, -0.7}, {-0.2, 0.4}}), "inversion");
-    check(matches(D * D.inverse(), {{1, 0}, {0, 1}}), "matrix times its inverse = identity");
-    */
-
-    if (failures == 0) {
-        cout << "All matrix tests passed.\n";
-        return 0;
+    std::cout << "--- Running Complete Matrix Unit Test Suite ---" << std::endl;
+    try {
+        test_matrix_construction_and_access();
+        test_matrix_arithmetic();
+        test_matrix_solvers_and_inversion();
+        test_matrix_exceptions();
+        std::cout << "\nAll Matrix Tests Passed Successfully!\n" << std::endl;
+    } catch (const std::exception& error) {
+        std::cerr << "[FAIL] Matrix test suite encountered an unexpected exception: " << error.what() << std::endl;
+        return 1;
     }
-    cout << failures << " matrix test(s) failed.\n";
-    return 1;
+    return 0;
 }

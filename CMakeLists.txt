@@ -1,23 +1,39 @@
-cmake_minimum_required(VERSION 3.14) # tells the computer not to try and build this project unless it has CMake version 3.14 or newer installed
-project(poly_reg VERSION 1.0 LANGUAGES CXX) # sets project name to poly-reg, gives it a version 1.0 and specifies that it uses C++
+# Root CMakeLists.txt (Christine's Final Week 4 Build Script)
+cmake_minimum_required(VERSION 3.14)
+project(PolyRegLibrary VERSION 1.0.0 LANGUAGES CXX)
 
-# Use C++17 standard
-set(CMAKE_CXX_STANDARD 17) # ensures that compiler uses modern C++17 features. forces build to fail otherwise.
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Tell C++ where public header files live
-include_directories(include) # tells the compiler where the public header files (.hpp) live.
+set(POLYREG_SOURCES
+    src/matrix.cpp
+    src/csv_loader.cpp
+    src/preprocessing.cpp
+    src/feature_expansion.cpp
+    src/polynomial_regression.cpp
+)
 
-# Gather all .cpp source files from src/
-file(GLOB SOURCES "src/*.cpp") # a wildcard search that looks inside src/ folder and gatherrs every .cpp file like matrix.cpp, preprocessing.cpp etc into a list named ${SOURCES}.
+add_library(poly_reg STATIC ${POLYREG_SOURCES})
 
-# Build the main reusable library
-add_library(poly_reg_lib ${SOURCES}) #takes gathered .cpp implementation files from src/ and packages them into  a single reusable library bundle named poly_reg_lib.
+target_include_directories(poly_reg PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
-# (Optional) Build tests if test files exist in tests/
-file(GLOB TEST_SOURCES "tests/*.cpp") # finds every test file in tests/ folder, extracts the file name, turns each test file into a runnable program, links that test program with poly_reg_lib so that the tests can run with the Matrix and Preprocessing functions directly.
-foreach(TEST_FILE ${TEST_SOURCES})
-    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-    add_executable(${TEST_NAME} ${TEST_FILE})
-    target_link_libraries(${TEST_NAME} PRIVATE poly_reg_lib)
-endforeach()
+# Test Executable Target (Joseph's Unit Tests)
+add_executable(run_tests
+    tests/test_matrix.cpp
+    tests/test_preprocessing.cpp
+    tests/test_regression.cpp
+    tests/test_gradient_descent.cpp
+)
+target_link_libraries(run_tests PRIVATE poly_reg)
+
+# Demonstration Executable Target (Allan's Demo)
+add_executable(run_demo
+    examples/polynomial_regression_demo.cpp
+)
+target_link_libraries(run_demo PRIVATE poly_reg)
+
+enable_testing()
+add_test(NAME FinalProjectTests COMMAND run_tests)

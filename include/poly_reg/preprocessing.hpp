@@ -1,22 +1,26 @@
-//this tells the computer to only read this file once during compiling so do not get confused by duplicate definitions
-
 #pragma once
 
-#include <vector>
 #include <utility>
-#include "matrix.hpp" //this brings in Kasule's matrix class
+#include "poly_reg/matrix.hpp"
 
-namespace poly_reg{
-    //Standardization
-    //this will take a reference to the matrix and scale its values
-    void Standardize (Matrix& data);
+namespace PolyReg {
 
-    //Min-Max Scaling
-    //this scale sthe matrix features into a specific range
-    void MinmaxScale (Matrix& data, double min_val = 0.0, double max_val = 1.0);
+class Preprocessing {
+public:
+    /**
+     * Scales feature columns to the range [0, 1] using Min-Max normalization.
+     */
+    static Matrix compute_min_max_scaling(const Matrix& input_feature_matrix);
 
-    //Train/Test Split
-    //this splits a dataset matrix into training and testing subsets
-    std::pair <Matrix, Matrix> TraintestSplit (const Matrix& data, double train_ratio = 0.8);
+    /**
+     * Standardizes feature columns to have a mean of 0 and standard deviation of 1 (Z-score).
+     */
+    static Matrix compute_z_score_standardization(const Matrix& input_feature_matrix);
 
-}
+    /**
+     * Splits a dataset matrix into training and testing subsets based on the provided proportion (e.g., 0.8 for 80%).
+     */
+    static std::pair<Matrix, Matrix> split_train_test_data(const Matrix& dataset_matrix, double training_proportion);
+};
+
+} // namespace PolyReg
