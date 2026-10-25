@@ -377,7 +377,7 @@ x,y_actual,y_predicted
 **5. Run the regression tests:**
 
 ```bash
-./build/test_regression
+.\build\test_regression
 ```
 
 > Note: the folder `data/output/` must exist before running the demo. It is created in the repository with a placeholder file, so no extra setup is needed after cloning.
@@ -391,33 +391,88 @@ This walks through the full Week 3 pipeline: load a CSV, expand `x` into polynom
 **Step 0: Build** (from the project root):
 
 ```bash
-cmake -B build
-cmake --build build
+cmake -B build_new
+cmake --build build_new
 ```
+**Step 1 : Running all unit and integration tests**
 
-**Step 1: Train on each Week 3 test dataset (`week3_degree1.csv` to `week3_degree4.csv`)** with its matching degree:
+* 1. Matrix Mathematics & Advanced Linear Algebra Solvers (Arnold & Joshua)
+.\build_new\test_matrix.exe
 
-```bash
-./build/poly_reg_demo data/input/week3_degree1.csv 1
-./build/poly_reg_demo data/input/week3_degree2.csv 2
-./build/poly_reg_demo data/input/week3_degree3.csv 3
-./build/poly_reg_demo data/input/week3_degree4.csv 4
-```
+* 2. Data Preprocessing & CSV Ingestion (Tatiana & Pruna)
+.\build_new\test_preprocessing.exe
 
-When the degree matches the data, the printed coefficients should be close to the curve the data was generated from, and the RMSE should be close to the noise level. Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if you want to keep a result.
+* 3. Ordinary Least Squares (OLS) Regression Integration (Group 15 OLS Pipeline)
+.\build_new\test_regression.exe
 
-**Step 2: Compare degrees on the same dataset** (for example, a degree-4 dataset fitted too low):
+* 4. Gradient Descent Convergence Verification (Iterative Optimizer)
+.\build_new\test_gradient_descent.exe
 
-```bash
-./build/poly_reg_demo data/input/week3_degree4.csv 2   # underfit: error is high
-./build/poly_reg_demo data/input/week3_degree4.csv 4   # matching degree: error close to the noise level
-```
+**Step 2: Running all demo programs**
 
-**Step 3: Run all tests at once:**
+* Demo 1: End-to-End Ordinary Least Squares (OLS) Demo (Allan's Driver)
+.\build_new\run_demo.exe
 
-```bash
-ctest --test-dir build --output-on-failure
-```
+* Demo 2: Iterative Gradient Descent Optimizer Demo
+.\build_new\run_gd_demo.exe
+
+* Demo 3: Feature Preprocessing & CSV Export Demo
+.\build_new\run_export_demo.exe
+
+* Demo 4: Visual ASCII Terminal Graph Estimation Demo
+.\build_new\run_graph_demo.exe
+
+**Step 3: Train on a dataset**
+* To train on a specific dataset, update the dataset file path string inside your target demo file (e.g., std::string dataset_path = "data/input/cubic_noisy.csv";) and re-run:
+cmake --build build_new
+.\build_new\run_demo.exe
+
+
+**Step 4: Compare polynomial degrees on the same dataset** 
+
+Open examples/polynomial_regression_demo.cpp.
+
+Change the int degree = 2; variable to different values (e.g., 1 for linear, 3 for cubic, or 5 for high-degree polynomial).
+
+Recompile and execute:
+cmake --build build_new
+.\build_new\run_demo.exe
+
+**Step 5: Comparing the two solvers (OLS vs. GRADIENT DESCENT)**
+* Our library implements two distinct numerical approaches to solving polynomial regression:
+
+**Ordinary Least Squares (OLS)**: 
+Closed-form matrix inversion solver ($\beta = (X^T X)^{-1} X^T y$). Solves weights instantly in a single analytical step.
+**Gradient Descent (GD)**: 
+Iterative optimization solver. Updates weights step-by-step using a learning rate ($\alpha$) across multiple epochs ($\nabla J(\beta)$).
+
+* How to Compare:Run the closed-form solver demo: 
+.\build_new\run_demo.exe
+
+* Run the iterative optimizer demo: 
+.\build_new\run_gd_demo.exe
+
+* Compare the resulting weight vectors ($\beta$) and execution times. Both solvers should converge to virtually identical parameter values for clean quadratic data.
+
+**Step 6: Checking Model Convergence (Gradient Descent)** 
+To verify that Gradient Descent successfully minimizes loss without diverging:
+Run;
+.\build_new\run_gradient_descent.exe or .\build_new\run_gd_demo.exe.
+Inspect the Final Convergence MSE printed in the console output. A decreasing loss across epochs confirms proper hyperparameter tuning (e.g., learning rate $\alpha = 0.01$).
+
+**Step 7: Checking the output files & CSV export**
+The CSV export module allows trained models to persist predictions back to disk.
+
+Run the export demonstration:
+
+PowerShell
+.\build_new\run_export_demo.exe
+
+Navigate to the data/output/ directory.
+
+Open predictions_demo.csv in any text editor or spreadsheet viewer.
+
+Verify that it contains two comma-separated columns (y_true,y_pred), contrasting actual target values against model estimates.
 
 **Troubleshooting**
 
@@ -428,65 +483,6 @@ ctest --test-dir build --output-on-failure
 | Singular matrix error | The degree is too high for the number of data points, so `XᵀX` cannot be inverted. Use a lower degree. |
 | Cannot write `predictions.csv` | The `data/output/` folder is missing. Recreate it with `mkdir -p data/output`. |
 
----
-
-## Running the Gradient Descent Demo
-
-This section covers the final Week 4 demos: training the same dataset with both solvers, **OLS (Normal Equation)** and **Gradient Descent**, from the terminal.
-
-**Step 0: Build** (from the project root):
-
-```bash
-cmake -B build
-cmake --build build
-```
-
-**Step 1: Run the OLS demo.** Arguments: input file, polynomial degree, solver.
-
-```bash
-./build/poly_reg_demo data/input/week3_degree2.csv 2 ols
-```
-
-This prints the coefficients `β`, MSE and RMSE, and saves the predictions to `data/output/predictions.csv`.
-
-**Step 2: Run the Gradient Descent demo.** Arguments: input file, polynomial degree, solver, learning rate, number of epochs.
-
-```bash
-./build/poly_reg_demo data/input/week3_degree2.csv 2 gd 0.01 5000
-```
-
-This expands `x` into a degree-2 design matrix, runs Gradient Descent for 5000 epochs with learning rate 0.01, prints the loss as it shrinks across epochs, then prints the final weights, MSE and RMSE, and saves the predictions to `data/output/predictions.csv`.
-
-**Step 3: Compare the two solvers.** Run both on the same dataset and degree. When Gradient Descent has converged, its weights and RMSE should be very close to the OLS result.
-
-```bash
-./build/poly_reg_demo data/input/week3_degree3.csv 3 ols
-./build/poly_reg_demo data/input/week3_degree3.csv 3 gd 0.01 20000
-```
-
-**Step 4: Check convergence.** The printed loss should decrease from epoch to epoch and flatten out near the end. If it does not, adjust the learning rate or the number of epochs (see Troubleshooting below).
-
-**Step 5: Check the output file:**
-
-```bash
-cat data/output/predictions.csv
-```
-
-**Step 6: Run all tests, including the Gradient Descent tests:**
-
-```bash
-ctest --test-dir build --output-on-failure
-```
-
-Each run overwrites `data/output/predictions.csv`, so copy the file elsewhere if you want to keep a result.
-
-**Troubleshooting (Gradient Descent)**
-
-| Problem | Likely cause and fix |
-| --- | --- |
-| Loss increases or prints `nan` / `inf` | The learning rate is too large and the weights are diverging. Lower it (e.g. 0.01 to 0.001) or scale the features first. |
-| Loss decreases very slowly and RMSE is far from the OLS result | The learning rate is too small or there are too few epochs. Raise either one. |
-| Higher degrees (4 and 5) do not converge | Powers of `x` are on very different scales. Standardize the features (see Preprocessing) and lower the learning rate. |
 
 ---
 ## Machine Learning Prediction Use Cases & Examples
@@ -621,8 +617,8 @@ The `main` branch is protected. Nobody pushes to it directly, and every change g
 1. **Update your local copy**
 
    ```bash
-   git checkout main
-   git pull
+   git status
+   git pull main
    ```
 2. **Create a new branch** for your work, named after your task:
 

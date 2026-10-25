@@ -28,3 +28,11 @@
 592	928	8145792534766299	run_export_demo.exe	7393d0f285fae6f1
 3	1044	8145797485680034	CMakeFiles/run_graph_demo.dir/examples/ascii_graph_demo.cpp.obj	1e56334db08c1ffe
 1052	1504	8145797496325601	run_graph_demo.exe	1096326466c4dcc0
+12	2179	8146566844495902	CMakeFiles/run_gd_demo.dir/examples/gradient_descent_demo.cpp.obj	b161e12d54c330cd
+2179	2772	8146566866209085	run_gd_demo.exe	2a5e94bf828b9e07
+3	453	8146570114834508	CMakeFiles/run_gd_demo.dir/examples/gradient_descent_demo.cpp.obj	b161e12d54c330cd
+454	770	8146570119348050	run_gd_demo.exe	2a5e94bf828b9e07
+8	510	8146571441535991	CMakeFiles/run_gd_demo.dir/examples/gradient_descent_demo.cpp.obj	b161e12d54c330cd
+3	523	8146571441436901	CMakeFiles/run_demo.dir/examples/polynomial_regression_demo.cpp.obj	8698e1bc8ff7c559
+524	737	8146571446689199	run_demo.exe	7b33f5b9be81059d
+511	790	8146571446563079	run_gd_demo.exe	2a5e94bf828b9e07

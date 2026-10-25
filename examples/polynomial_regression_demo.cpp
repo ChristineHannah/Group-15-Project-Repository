@@ -13,7 +13,7 @@ int main()
         std::cout << "========================================\n\n";
 
         // 1. Load Dataset
-        std::string dataset_path = "data/input/quadratic_clean.csv";
+        std::string dataset_path = "data/input/cubic_noisy.csv";
         std::cout << "[INFO] Loading dataset from: " << dataset_path << "\n";
         PolyReg::Matrix raw_dataset = PolyReg::CSVLoader::load_dataset_from_csv(dataset_path);
 
