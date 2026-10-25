@@ -59,6 +59,10 @@
 
    In this project, `fit()` calls `buildDesignMatrix()`, and the correct version runs automatically.
 
+**Photo showing inheritance and polymorphism**
+![alt text](image.png)
+
+
 **Challenges and their corresponding solutions**
 
 **Challenges**
