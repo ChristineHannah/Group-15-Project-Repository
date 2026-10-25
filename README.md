@@ -106,26 +106,6 @@ To start fresh, delete the `build/` folder and run both commands again.
 
 ---
 
-## Running Tests
-
-After building, run the test executables from the `build/` folder (exact names are defined in `CMakeLists.txt`):
-
-```bash
-./build/test_matrix
-./build/test_preprocessing
-./build/test_regression
-./build/test_gradient_descent
-```
-
-If the tests are registered with CTest, you can run them all at once:
-
-```bash
-ctest --test-dir build --output-on-failure
-```
-
-All tests should pass before a Pull Request is merged.
-
----
 
 ## Project Structure
 
@@ -343,34 +323,43 @@ cmake --build build_new
 ```
 **Step 1 : Running all unit and integration tests**
 
-* 1. Matrix Mathematics & Advanced Linear Algebra Solvers (Arnold & Joshua)
+* 1. Matrix Mathematics & Advanced Linear Algebra Solvers:
+
 .\build_new\test_matrix.exe
 
-* 2. Data Preprocessing & CSV Ingestion (Tatiana & Pruna)
+* 2. Data Preprocessing & CSV Ingestion: 
+
 .\build_new\test_preprocessing.exe
 
-* 3. Ordinary Least Squares (OLS) Regression Integration (Group 15 OLS Pipeline)
+* 3. Ordinary Least Squares (OLS) Regression Integration:
+
 .\build_new\test_regression.exe
 
-* 4. Gradient Descent Convergence Verification (Iterative Optimizer)
+* 4. Gradient Descent Convergence Verification:
+
 .\build_new\test_gradient_descent.exe
 
 **Step 2: Running all demo programs**
 
-* Demo 1: End-to-End Ordinary Least Squares (OLS) Demo (Allan's Driver)
+* Demo 1: End-to-End Ordinary Least Squares (OLS) Demo:
+
 .\build_new\run_demo.exe
 
-* Demo 2: Iterative Gradient Descent Optimizer Demo
+* Demo 2: Iterative Gradient Descent Optimizer Demo:
+
 .\build_new\run_gd_demo.exe
 
-* Demo 3: Feature Preprocessing & CSV Export Demo
+* Demo 3: Feature Preprocessing & CSV Export Demo:
+
 .\build_new\run_export_demo.exe
 
-* Demo 4: Visual ASCII Terminal Graph Estimation Demo
+* Demo 4: Visual ASCII Terminal Graph Estimation Demo:
+
 .\build_new\run_graph_demo.exe
 
 **Step 3: Train on a dataset**
 * To train on a specific dataset, update the dataset file path string inside your target demo file (e.g., std::string dataset_path = "data/input/cubic_noisy.csv";) and re-run:
+
 cmake --build build_new
 .\build_new\run_demo.exe
 
