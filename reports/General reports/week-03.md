@@ -1,4 +1,4 @@
-# Group 15: Project Accomplishments Report (Weeks 3 & 4)
+# Group 15: Project Accomplishments Report 
 **Project:** Polynomial Regression & Machine Learning Library from Scratch (C++17)  
 **Group Leader:** Christine Hannah Adong
 
@@ -16,7 +16,6 @@ During Weeks 3 and 4, Group 15 focused on architectural integration, core linear
 * **Week 3 Accomplishments:**
   * Developed the core `Matrix` class (`include/poly_reg/matrix.hpp` and `src/matrix.cpp`), supporting dynamic sizing, bounds-checked element access (`at()`), and initializer list constructors.
   * Implemented core operator overloads (`+`, `-`, `*`) for matrix arithmetic and scalar multiplication.
-* **Week 4 Accomplishments:**
   * Implemented advanced linear algebra routines, including matrix transposition (`transpose()`), Gaussian elimination for determinant calculation (`compute_determinant()`), and Gauss-Jordan elimination for matrix inversion (`compute_inverse()`).
   * Authored comprehensive unit tests (`tests/test_matrix.cpp`) verifying arithmetic correctness, exception handling, and matrix inversion solvers.
 
@@ -25,7 +24,6 @@ During Weeks 3 and 4, Group 15 focused on architectural integration, core linear
 * **Week 3 Accomplishments:**
   * Implemented feature preprocessing utilities (`include/poly_reg/preprocessing.hpp` and `src/preprocessing.cpp`), including Min-Max feature normalization and Z-score standardization.
   * Developed dataset splitting routines for training and testing data partitions.
-* **Week 4 Accomplishments:**
   * Integrated evaluation metric functions directly into the model architecture (`calculate_mse` and `calculate_rmse`) to quantify model error against ground-truth targets.
   * Authored preprocessing unit tests (`tests/test_preprocessing.cpp`) validating scaling bounds and numerical stability.
 
@@ -34,7 +32,6 @@ During Weeks 3 and 4, Group 15 focused on architectural integration, core linear
 * **Week 3 Accomplishments:**
   * Developed the `CSVLoader` class (`include/poly_reg/csv_loader.hpp` and `src/csv_loader.cpp`) to parse comma-separated datasets from disk into structured `Matrix` objects.
   * Implemented robust exception handling for missing files, ragged rows, and malformed numeric entries.
-* **Week 4 Accomplishments:**
   * Implemented a prediction export module (`export_predictions_to_csv`) allowing trained models to write inferred target vectors and ground truths back to `data/output/` for external analysis.
   * Verified file I/O operations through automated ingestion tests.
 
@@ -43,7 +40,6 @@ During Weeks 3 and 4, Group 15 focused on architectural integration, core linear
 * **Week 3 Accomplishments:**
   * Implemented polynomial feature expansion (`include/poly_reg/feature_expansion.hpp` and `src/feature_expansion.cpp`) to transform 1D inputs into multi-degree feature matrices.
   * Developed the core `PolynomialRegression` class supporting the normal equation closed-form solver ($\beta = (X^T X)^{-1} X^T y$).
-* **Week 4 Accomplishments:**
   * Implemented the iterative Gradient Descent optimization solver (`fit_gradient_descent`) with configurable learning rates ($\alpha$) and epoch iterations.
   * Created multiple project demonstration binaries (`run_demo`, `run_gd_demo`, `run_export_demo`, and `run_graph_demo`), including a terminal-based ASCII graph renderer to visually plot model curves against actual data points.
 
