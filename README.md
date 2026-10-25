@@ -330,61 +330,8 @@ For larger datasets, use the ready-made files in `data/input/` (`poly_degree1.cs
 
 ---
 
-## Running the Training and Evaluation Demo
 
-Build the project first (see [Building the Project](#building-the-project)). Then run the demo from the project root.
-
-**1. Train and evaluate on a dataset** (arguments: input file, polynomial degree):
-
-```bash
-./build/poly_reg_demo data/input/poly_degree2.csv 2
-```
-
-This loads the CSV, expands `x` into a degree-2 design matrix, solves for `β` with the Normal Equation, predicts `ŷ`, prints the coefficients, MSE and RMSE, and saves the predictions to `data/output/predictions.csv`.
-
-**2. Run every dataset with its matching degree:**
-
-```bash
-./build/poly_reg_demo data/input/poly_degree1.csv 1
-./build/poly_reg_demo data/input/poly_degree2.csv 2
-./build/poly_reg_demo data/input/poly_degree3.csv 3
-./build/poly_reg_demo data/input/poly_degree4.csv 4
-./build/poly_reg_demo data/input/poly_degree5.csv 5
-```
-
-**3. Demonstrate underfitting and overfitting:** fit the same dataset with different degrees and compare the error.
-
-```bash
-./build/poly_reg_demo data/input/poly_degree2.csv 1   # underfit: error is high
-./build/poly_reg_demo data/input/poly_degree2.csv 2   # good fit: error close to the noise level
-./build/poly_reg_demo data/input/poly_degree2.csv 5   # overfit: training error is lowest, but the curve follows noise
-```
-
-**4. Check the output file:**
-
-```bash
-cat data/output/predictions.csv
-```
-
-Expected format:
-
-```csv
-x,y_actual,y_predicted
-1.0,2.1,2.0
-2.0,4.9,5.1
-```
-
-**5. Run the regression tests:**
-
-```bash
-.\build\test_regression
-```
-
-> Note: the folder `data/output/` must exist before running the demo. It is created in the repository with a placeholder file, so no extra setup is needed after cloning.
-
----
-
-### Week 3: Full training demo (step by step)
+### Full training demo (step by step)
 
 This walks through the full Week 3 pipeline: load a CSV, expand `x` into polynomial features, compute `XᵀX` and `Xᵀy`, solve for `β`, predict, score (MSE and RMSE) and save the results.
 
