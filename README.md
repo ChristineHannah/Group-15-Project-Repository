@@ -318,50 +318,52 @@ This walks through the full Week 3 pipeline: load a CSV, expand `x` into polynom
 **Step 0: Build** (from the project root):
 
 ```bash
-cmake -B build_new
-cmake --build build_new
+cmake -B build
+cmake --build build
 ```
 **Step 1 : Running all unit and integration tests**
 
 * 1. Matrix Mathematics & Advanced Linear Algebra Solvers:
 
-.\build_new\test_matrix.exe
+.\build\test_matrix.exe
 
 * 2. Data Preprocessing & CSV Ingestion: 
 
-.\build_new\test_preprocessing.exe
+.\build\test_preprocessing.exe
 
 * 3. Ordinary Least Squares (OLS) Regression Integration:
 
-.\build_new\test_regression.exe
+.\build\test_regression.exe
 
 * 4. Gradient Descent Convergence Verification:
 
-.\build_new\test_gradient_descent.exe
+.\build\test_gradient_descent.exe
 
 **Step 2: Running all demo programs**
 
 * Demo 1: End-to-End Ordinary Least Squares (OLS) Demo:
 
-.\build_new\run_demo.exe
+.\build\run_demo.exe
 
 * Demo 2: Iterative Gradient Descent Optimizer Demo:
 
-.\build_new\run_gd_demo.exe
+.\build\run_gd_demo.exe
 
 * Demo 3: Feature Preprocessing & CSV Export Demo:
 
-.\build_new\run_export_demo.exe
+.\build\run_export_demo.exe
 
 * Demo 4: Visual ASCII Terminal Graph Estimation Demo:
 
-.\build_new\run_graph_demo.exe
+.\build\run_graph_demo.exe
+
 
 **Step 3: Train on a dataset**
+
 * To train on a specific dataset, update the dataset file path string inside your target demo file (e.g., std::string dataset_path = "data/input/cubic_noisy.csv";) and re-run:
 
-cmake --build build_new
-.\build_new\run_demo.exe
+cmake --build build
+.\build\run_demo.exe
 
 
 **Step 4: Compare polynomial degrees on the same dataset** 
@@ -371,42 +373,49 @@ Open examples/polynomial_regression_demo.cpp.
 Change the int degree = 2; variable to different values (e.g., 1 for linear, 3 for cubic, or 5 for high-degree polynomial).
 
 Recompile and execute:
-cmake --build build_new
-.\build_new\run_demo.exe
+cmake --build build
+.\build\run_demo.exe
 
 **Step 5: Comparing the two solvers (OLS vs. GRADIENT DESCENT)**
 * Our library implements two distinct numerical approaches to solving polynomial regression:
 
 **Ordinary Least Squares (OLS)**: 
 Closed-form matrix inversion solver ($\beta = (X^T X)^{-1} X^T y$). Solves weights instantly in a single analytical step.
+
 **Gradient Descent (GD)**: 
 Iterative optimization solver. Updates weights step-by-step using a learning rate ($\alpha$) across multiple epochs ($\nabla J(\beta)$).
 
 * How to Compare:Run the closed-form solver demo: 
-.\build_new\run_demo.exe
+.\build\run_demo.exe
 
 * Run the iterative optimizer demo: 
-.\build_new\run_gd_demo.exe
+.\build\run_gd_demo.exe
 
 * Compare the resulting weight vectors ($\beta$) and execution times. Both solvers should converge to virtually identical parameter values for clean quadratic data.
 
 **Step 6: Checking Model Convergence (Gradient Descent)** 
+
 To verify that Gradient Descent successfully minimizes loss without diverging:
-Run;
-.\build_new\run_gradient_descent.exe or .\build_new\run_gd_demo.exe.
+
+Run: 
+
+.\build\run_gradient_descent.exe or .\build\run_gd_demo.exe.
+
 Inspect the Final Convergence MSE printed in the console output. A decreasing loss across epochs confirms proper hyperparameter tuning (e.g., learning rate $\alpha = 0.01$).
 
 **Step 7: Checking the output files & CSV export**
+
 The CSV export module allows trained models to persist predictions back to disk.
 
-Run the export demonstration:
+* Run the export demonstration:
 
 PowerShell
-.\build_new\run_export_demo.exe
 
-Navigate to the data/output/ directory.
+.\build\run_export_demo.exe
 
-Open predictions_demo.csv in any text editor or spreadsheet viewer.
+* Navigate to the data/output/ directory.
+
+* Open predictions_demo.csv in any text editor or spreadsheet viewer.
 
 Verify that it contains two comma-separated columns (y_true,y_pred), contrasting actual target values against model estimates.
 
