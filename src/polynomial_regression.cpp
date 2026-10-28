@@ -96,42 +96,62 @@ namespace PolyReg
     }
 
     // Tatiana's Week 3 Evaluation Metrics
+    /*Mean Squared Error (MSE) calculation
+    this function computes the average squared difference between the true values and the model's predictions.
+    *MSE = (1/n) * sum(y_true - y_pred ^2)*/
     double PolynomialRegression::calculate_mse(const Matrix &y_true, const Matrix &y_pred) const
     {
+        // ensure both matrices have matching row counts
         if (y_true.get_rows() != y_pred.get_rows())
         {
             throw std::invalid_argument("Error: Dimension mismatch between true and predicted targets.");
         }
         int n = y_true.get_rows();
+        
+        //prevents dividion by zero if matrices are empty
         if (n == 0)
             throw std::invalid_argument("Error: Cannot calculate MSE on empty matrices.");
 
         double sum_squared_error = 0.0;
+        //loop through each observation to calculate the error residuals
         for (int i = 0; i < n; ++i)
         {
             double diff = y_true.at(i, 0) - y_pred.at(i, 0);
             sum_squared_error += (diff * diff);
         }
+        // return the average squared error across all rows
         return sum_squared_error / static_cast<double>(n);
     }
 
+    /*Root Mean Squared Error (RMSE) Calculation
+    *this function takes the square root of the MSE tobring error values
+    back down to the original physical units of the target variable.*/
     double PolynomialRegression::calculate_rmse(const Matrix &y_true, const Matrix &y_pred) const
     {
         return std::sqrt(calculate_mse(y_true, y_pred));
     }
 
     // Tatiana's Week 4 Convergence Loss Tracker Implementation
+   /*Final Convergence Loss Tracker
+   * this function runs a prediction pass on input features and evaluates final error
+   * using MSE to check how well the model has converged during training*/
     double PolynomialRegression::calculate_final_convergence_loss(const Matrix &X_input, const Matrix &y_target) const
     {
         Matrix preds = predict(X_input);
         return calculate_mse(y_target, preds);
     }
 
+    /*Get Polynomial Degree
+    *Returns the degree configured for this model instance*/
     int PolynomialRegression::get_degree() const
     {
         return polynomial_degree;
     }
 
+/*
+*Get Weight Coefficients
+*Returns the trained weight vector matrix.
+*/
     Matrix PolynomialRegression::get_coefficients() const
     {
         return weight_coefficients;
