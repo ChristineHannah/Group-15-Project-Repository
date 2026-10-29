@@ -43,6 +43,4 @@ Challenge: My project folder still had old .exe files from earlier builds, which
 Solution: I added only the specific test file with git add and checked git status before committing.
 
 # 4. AI Tool Transparency
-Tool Used: test_regression.cpp was generated with Claude and I submitted the file unchanged.
-I used Claude o help me draft an outline for this report, then reviewed and wrote it in my own words.
-Claude in a chat helped me with Git commands, explained the class headers on main, checked if my earlier reports were uploaded and helped me submit this one too. 
+Tool Used: Claude AI was consulted on syntax for the code. It was also used to further understand the task and also consulted on how to include an image in an MD file.
