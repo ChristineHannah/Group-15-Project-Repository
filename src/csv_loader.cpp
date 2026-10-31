@@ -50,7 +50,7 @@ Matrix CSVLoader::load_dataset_from_csv(const std::string& file_path) {
             }
         }
 
-        if (current_row_values.empty()) continue;  // Skip line if no numeric values were collected from it
+        if (current_row_values.empty()) continue;  // Skip the line if no numeric values were collected from it
 
         if (expected_column_count == -1) {  // If this is the first valid row, set the expected column count based on its size
             expected_column_count = static_cast<int>(current_row_values.size());
