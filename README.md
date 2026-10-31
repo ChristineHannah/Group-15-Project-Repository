@@ -397,9 +397,9 @@ Iterative optimization solver. Updates weights step-by-step using a learning rat
 
 To verify that Gradient Descent successfully minimizes loss without diverging:
 
-Run: 
+Run:
 
-.\build\run_gradient_descent.exe or .\build\run_gd_demo.exe.
+.\build\run_gd_demo.exe
 
 Inspect the Final Convergence MSE printed in the console output. A decreasing loss across epochs confirms proper hyperparameter tuning (e.g., learning rate $\alpha = 0.01$).
 
