@@ -8,10 +8,13 @@
 #include "poly_reg/csv_loader.hpp"
 
 // Helper function for safe floating-point comparison
+// Safely checks if two calculated floating-point numbers are nearly equal.
 bool is_nearly_equal(double calculated_val, double expected_val, double tolerance = 1e-5) {
     return std::fabs(calculated_val - expected_val) < tolerance;
 }
 
+// TEST: Min-Max Scaling
+// Verifies that features are correctly normalized to a range between 0.0 and 1.0.
 void test_min_max_scaling() {
     using namespace PolyReg;
 
@@ -32,6 +35,8 @@ void test_min_max_scaling() {
     std::cout << "[PASS] Min-Max Scaling Test (Tatiana)\n";
 }
 
+// TEST: Z-Score Standardization
+// Verifies that data is standardized such that its mean becomes approximately 0.
 void test_z_score_standardization() {
     using namespace PolyReg;
 
@@ -59,6 +64,8 @@ void test_z_score_standardization() {
     std::cout << "[PASS] Z-Score Standardization Test (Tatiana)\n";
 }
 
+// TEST: Train/Test Split
+// Verifies that a dataset is properly split into training and testing subsets
 void test_train_test_split() {
     using namespace PolyReg;
 
@@ -85,6 +92,7 @@ void test_csv_loader() {
     }
 }
 
+// MAIN FUNCTION: Entry point for running preprocessing unit tests
 int main() {
     std::cout << "--- Running Preprocessing & Data Ingestion Test Suite ---" << std::endl;
     try {
