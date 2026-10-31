@@ -5,11 +5,17 @@
 #include "poly_reg/matrix.hpp"
 #include "poly_reg/polynomial_regression.hpp"
 
+// HELPER FUNCTION: Floating-Point Comparison
+// Safely checks closeness of fit parameters.
+
 bool is_nearly_equal(double calculated_val, double expected_val, double tolerance = 1e-3)
 {
     return std::fabs(calculated_val - expected_val) < tolerance;
 }
 
+//TEST: Degree 1 Linear Fit Integration Test
+// Fits a linear model (degree 1) to a straight line dataset (y = 2x + 1) and 
+// verifies the extracted intercept and slope weights.
 void test_linear_fit_degree_1()
 {
     using namespace PolyReg;
@@ -27,6 +33,9 @@ void test_linear_fit_degree_1()
     std::cout << "[PASS] Degree 1 Linear Fit Integration Test\n";
 }
 
+// TEST: Degree 2 Quadratic Fit Integration Test
+// Fits a quadratic model (degree 2) to a parabolic dataset (y = x^2 + 2x + 3) 
+// and evaluates the prediction Mean Squared Error (MSE)
 void test_quadratic_fit_degree_2()
 {
     using namespace PolyReg;
@@ -46,6 +55,7 @@ void test_quadratic_fit_degree_2()
     std::cout << "[PASS] Degree 2 Quadratic Fit Integration Test\n";
 }
 
+// MAIN FUNCTION: Runs polynomial regression integration tests
 int main()
 {
     std::cout << "--- Running Complete Polynomial Regression Integration Test Suite ---\n";
