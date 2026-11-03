@@ -6,10 +6,13 @@
 
 namespace PolyReg {
 
-Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix) {
+    //MIN-MAX SCALING
+    //this function rescales all values in each feature column to a uniform range between 0.0 and 1.0.
+    Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix) {
     int total_rows = input_feature_matrix.get_rows();
     int total_cols = input_feature_matrix.get_cols();
 
+    //this if condition makers sure we are not trying to scale and empty matrix
     if (total_rows == 0 || total_cols == 0) {
         throw std::invalid_argument("Error: Cannot scale an empty matrix.");
     }
@@ -45,10 +48,14 @@ Matrix Preprocessing::compute_min_max_scaling(const Matrix& input_feature_matrix
     return scaled_matrix;
 }
 
+/*Z-Score Standardization function
+this function centers data around a mean of 0.0 with a standard deviation of 1.0.
+whereby z= (x-mean) / standard_deviation*/
 Matrix Preprocessing::compute_z_score_standardization(const Matrix& input_feature_matrix) {
     int total_rows = input_feature_matrix.get_rows();
     int total_cols = input_feature_matrix.get_cols();
 
+    //Standard deviation requiresatleast 2 data point (n-1 denominator)
     if (total_rows <= 1) {
         throw std::invalid_argument("Error: Insufficient rows for Z-score standardization (requires at least 2 rows).");
     }
@@ -87,17 +94,23 @@ Matrix Preprocessing::compute_z_score_standardization(const Matrix& input_featur
     return standardized_matrix;
 }
 
+/*Train/Test Data Split Function
+this function splits our dataset into a training subset (to teach the model)
+* and a testing subset (to blindly test how well it learned).*/
 std::pair<Matrix, Matrix> Preprocessing::split_train_test_data(const Matrix& dataset_matrix, double training_proportion) {
     int total_rows = dataset_matrix.get_rows();
     int total_cols = dataset_matrix.get_cols();
 
+    // here we validate that the split proportion makes sense like between 0 and 100%
     if (training_proportion <= 0.0 || training_proportion >= 1.0) {
         throw std::invalid_argument("Error: Training proportion must be strictly between 0.0 and 1.0.");
     }
 
+    //we calculate how many rows belong to training vs testing
     int training_row_count = static_cast<int>(std::round(total_rows * training_proportion));
     int testing_row_count = total_rows - training_row_count;
 
+    //make sure neither subset ended up completely empty
     if (training_row_count == 0 || testing_row_count == 0) {
         throw std::runtime_error("Error: Dataset size is too small to perform the requested train/test split.");
     }
