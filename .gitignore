@@ -13,3 +13,5 @@ build_new/
 .idea/
 .DS_Store
 Thumbs.db
+
+#This file prevents binary clutter in the GitHub shared repository by ignoring compiled object files, executables, and IDE-specific files that are not relevant to the source code. It ensures that only the source code and necessary configuration files are tracked in version control.
