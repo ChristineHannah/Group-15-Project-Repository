@@ -1,14 +1,18 @@
-// tests/test_gradient_descent.cpp (Joseph's New Test File)
 #include <iostream>
 #include <cassert>
 #include <cmath>
 #include "poly_reg/matrix.hpp"
 #include "poly_reg/polynomial_regression.hpp"
 
+// HELPER FUNCTION: Close Value Comparison
+// Checks if two gradient-descent parameters are close within a tolerance.
 bool is_close_val(double a, double b, double tol = 1e-2) {
     return std::fabs(a - b) < tol;
 }
 
+// TEST: Gradient Descent Convergence Integration Test (Joseph's section)
+// Trains a linear model using gradient descent optimization on a linear dataset 
+// (y = 3x + 2) and asserts that the coefficients converge close to expected values.
 void test_gradient_descent_convergence() {
     using namespace PolyReg;
     // Simple linear dataset y = 3x + 2
@@ -28,6 +32,7 @@ void test_gradient_descent_convergence() {
     std::cout << "[PASS] Gradient Descent Convergence Integration Test\n";
 }
 
+// MAIN FUNCTION: Entry point for gradient descent tests
 int main() {
     std::cout << "--- Running Gradient Descent Test Suite ---\n";
     try {
