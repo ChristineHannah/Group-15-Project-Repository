@@ -42,7 +42,7 @@ namespace PolyReg
 
         // Safe Element Access with Bounds Checking. Provides bounds-checked safe element access.
         double &at(size_t r, size_t c);             // returns a modifiable reference to the number sitting at r or c. It can be used to either read or change a value. It first checks if r and c are valid - if not it throws an out_of_range exception instead of crashing the computer.
-        const double &at(size_t r, size_t c) const; // does he same bound checking but returns only a read only reference meaning you cannot modify the value.
+        const double &at(size_t r, size_t c) const; // does the same bound checking but returns only a read only reference meaning you cannot modify the value.
 
         // Core Arithmetic Operators
         // Operator overloaders for matrix addition, subtraction, scalar multiplication and matix-matrix multiplication. These allow you to use the standard arithmetic symbols (+, -, *) with Matrix objects in a natural way.
