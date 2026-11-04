@@ -32,13 +32,13 @@ During Week 4, we didn't add any crazy new features. We mostly focused on integr
 From Kyankya Joseph;
 
 
-![alt text](<images for final/Kyankya's image.jpg>)
+![alt text](<images for final/Kyankya image.jpg>)
 
 
 From Kyamulabi Priscilla;
 
 
-![alt text](<images for final/Tatiana's image 1.jpg>)
+![alt text](<images for final/Tatiana image 1.jpg>)
 
 
 
