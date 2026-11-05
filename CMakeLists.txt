@@ -42,9 +42,6 @@ add_executable(run_demo examples/polynomial_regression_demo.cpp)
 target_link_libraries(run_demo PRIVATE poly_reg)
 
 
-add_executable(run_export_demo examples/preprocessing_export_demo.cpp)
-target_link_libraries(run_export_demo PRIVATE poly_reg)
-
 add_executable(run_graph_demo examples/ascii_graph_demo.cpp)
 target_link_libraries(run_graph_demo PRIVATE poly_reg)
 

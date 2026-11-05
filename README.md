@@ -345,15 +345,8 @@ cmake --build build
 
 .\build\run_demo.exe
 
-* Demo 2: Iterative Gradient Descent Optimizer Demo:
 
-.\build\run_gd_demo.exe
-
-* Demo 3: Feature Preprocessing & CSV Export Demo:
-
-.\build\run_export_demo.exe
-
-* Demo 4: Visual ASCII Terminal Graph Estimation Demo:
+* Demo 2: Visual ASCII Terminal Graph Estimation Demo:
 
 .\build\run_graph_demo.exe
 
