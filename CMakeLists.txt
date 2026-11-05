@@ -41,8 +41,6 @@ target_link_libraries(test_gradient_descent PRIVATE poly_reg)
 add_executable(run_demo examples/polynomial_regression_demo.cpp)
 target_link_libraries(run_demo PRIVATE poly_reg)
 
-add_executable(run_gd_demo examples/gradient_descent_demo.cpp)
-target_link_libraries(run_gd_demo PRIVATE poly_reg)
 
 add_executable(run_export_demo examples/preprocessing_export_demo.cpp)
 target_link_libraries(run_export_demo PRIVATE poly_reg)
@@ -55,4 +53,3 @@ enable_testing() #Activates CMake's built - in testing framework. Tells it that 
 add_test(NAME MatrixTest COMMAND test_matrix)
 add_test(NAME PreprocessingTest COMMAND test_preprocessing)
 add_test(NAME RegressionTest COMMAND test_regression)
-add_test(NAME GradientDescentTest COMMAND test_gradient_descent)
