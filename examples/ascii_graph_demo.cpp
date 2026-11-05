@@ -14,25 +14,29 @@ int main()
         std::cout << "==================================================\n\n";
 
         // 1. Load Dataset
-        std::string dataset_path = "data/input/degree5_quintic.csv";
-        std::cout << "[INFO] Loading dataset from: " << dataset_path << "\n";
-        PolyReg::Matrix raw_dataset = PolyReg::CSVLoader::load_dataset_from_csv(dataset_path);
+        std::string dataset_path = "data/input/degree5_quintic.csv";                           // stores the file path string pointing to Allan's sample dataset file.
+        std::cout << "[INFO] Loading dataset from: " << dataset_path << "\n";                  // prints an informational status message to the terminal
+        PolyReg::Matrix raw_dataset = PolyReg::CSVLoader::load_dataset_from_csv(dataset_path); // calls Pruna's CSV loader module to open the file
+        // and parse the numbers row by row into  a 2D Matrix object.
 
-        int total_rows = raw_dataset.get_rows();
-        PolyReg::Matrix X_features(total_rows, 1);
-        PolyReg::Matrix y_targets(total_rows, 1);
+        int total_rows = raw_dataset.get_rows();   // counts how many rows of data points were loaded from the file
+        PolyReg::Matrix X_features(total_rows, 1); // a matrix to holdinout features with a col count of 1
+        PolyReg::Matrix y_targets(total_rows, 1);  // matrix to hold target answers with a col count of 1
 
-        double min_x = 1e9, max_x = -1e9;
-        double min_y = 1e9, max_y = -1e9;
+        double min_x = 1e9, max_x = -1e9; // tracks the lowest and highest X value in the dataset
+        // such extreme values ensure that the very first real data point will successfully overwrite it.
+        double min_y = 1e9, max_y = -1e9; // lowest and highest Y value in the dataset.
 
         for (int r = 0; r < total_rows; ++r)
         {
-            double xv = raw_dataset.at(r, 0);
+            double xv = raw_dataset.at(r, 0); // .at(r,c) looks inside a grid table
+            // col 0 is always reserved for input feature X values
+            // col 1 is always reserved for the atarget answer Y values
             double yv = raw_dataset.at(r, 1);
             X_features.at(r, 0) = xv;
             y_targets.at(r, 0) = yv;
 
-            if (xv < min_x)
+            if (xv < min_x) // comparison with current minimums and maximus such that we know the absolute lowest and highest bounds of the graph
                 min_x = xv;
             if (xv > max_x)
                 max_x = xv;
